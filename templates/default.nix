@@ -1,5 +1,5 @@
 {
-  home-simple = {
-    path = ./home-manager/simple;
+  home-mini = {
+    path = ./home/mini;
   };
 }

@@ -13,11 +13,15 @@
 
   home.packages = with pkgs; [
     # some basic packages
-    zsh-syntax-highlighting
-    zsh-autosuggestions
+    # https://github.com/zsh-users/zsh-completions
     zsh-completions
+    # https://github.com/zsh-users/zsh-autosuggestions
+    zsh-autosuggestions
+    # https://github.com/zsh-users/zsh-syntax-highlighting
+    zsh-syntax-highlighting
 
     # replace default tab menu with fzf
+    # https://github.com/Aloxaf/fzf-tab
     zsh-fzf-tab
 
     # A smarter cd command, like z and autojump.
@@ -52,11 +56,11 @@
       # Alternative ZDOTDIR
       dotDir = ".config/zsh";
 
-      # https://github.com/zsh-users/zsh-completions
+      # Enable zsh-completions
       enableCompletion = true;
-      # https://github.com/zsh-users/zsh-autosuggestions
+      # Enable zsh-autosuggestions
       autosuggestion.enable = true;
-      # https://github.com/zsh-users/zsh-syntax-highlighting
+      # Enable zsh-syntax-highlighting
       syntaxHighlighting.enable = true;
       
       # history substring search, type `cd` and press up arrow to search history with `cd` in it.
