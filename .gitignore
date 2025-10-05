@@ -1,0 +1,7 @@
+templates/*/flake.lock
+templates/*/.envrc
+templates/*/.direnv
+templates/*/.bin
+
+.idea
+/result

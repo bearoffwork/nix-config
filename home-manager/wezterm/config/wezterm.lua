@@ -1,0 +1,117 @@
+local colors = require("colors")
+local wezterm = require("wezterm")
+
+local function tab_title(tab_info)
+  local title = tab_info.tab_title
+  -- if the tab title is explicitly set, take that
+  if title and #title > 0 then
+    return title
+  end
+  -- Otherwise, use the title from the active pane
+  -- in that tab
+  return tab_info.active_pane.title
+end
+
+wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
+  local title = tab_title(tab)
+  return {
+    { Text = " " .. title .. " " },
+  }
+end)
+
+return {
+  default_prog = {
+    "/run/current-system/sw/bin/zsh",
+    "-l",
+  },
+
+  font = wezterm.font({
+    family = "ComicCode Nerd Font",
+  }),
+  font_size = 13,
+
+  initial_cols = 112,
+  initial_rows = 28,
+
+  max_fps = 120,
+  front_end = "WebGpu",
+  webgpu_power_preference = "HighPerformance",
+  -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Dx12', 'IntegratedGpu'),
+  -- webgpu_preferred_adapter = gpu_adapters:pick_manual('Gl', 'Other'),
+  underline_thickness = "1.5pt",
+
+  -- cursor
+  animation_fps = 120,
+  cursor_blink_ease_in = "EaseOut",
+  cursor_blink_ease_out = "EaseOut",
+  cursor_blink_rate = 650,
+  cursor_thickness = "0.1cell",
+  default_cursor_style = "BlinkingUnderline",
+
+  -- color scheme
+  colors = colors.scheme,
+
+  -- tab bar
+  enable_tab_bar = true,
+  use_fancy_tab_bar = false,
+  tab_max_width = 60,
+  tab_bar_at_bottom = false,
+  show_tab_index_in_tab_bar = false,
+  show_new_tab_button_in_tab_bar = false,
+  -- switch_to_last_active_tab_when_closing_tab = true,
+
+  -- window
+  window_decorations = "RESIZE|INTEGRATED_BUTTONS",
+  -- adjust_window_size_when_changing_font_size = false,
+  window_close_confirmation = "NeverPrompt",
+  window_background_opacity = colors.opacity,
+  macos_window_background_blur = 40,
+  window_padding = {
+    left = 8,
+    right = 8,
+    top = "4px",
+    bottom = "4px",
+  },
+  window_frame = {
+    border_left_width = "2px",
+    border_right_width = "2px",
+    border_left_color = colors.palette.surface1,
+    border_right_color = colors.palette.surface1,
+  },
+
+  visual_bell = {
+    fade_in_function = "EaseIn",
+    fade_in_duration_ms = 250,
+    fade_out_function = "EaseOut",
+    fade_out_duration_ms = 250,
+    target = "CursorColor",
+  },
+
+  keys = {
+    {
+      key = "+",
+      mods = "CTRL|SHIFT",
+      action = wezterm.action.ToggleFullScreen,
+    },
+  },
+
+  mouse_bindings = {
+    {
+      event = { Up = { streak = 1, button = "Left" } },
+      mods = "NONE",
+      action = wezterm.action.CompleteSelection("ClipboardAndPrimarySelection"),
+    },
+    -- Ctrl-click will open the link under the mouse cursor
+    {
+      event = { Up = { streak = 1, button = "Left" } },
+      mods = "CTRL",
+      action = wezterm.action.OpenLinkAtMouseCursor,
+    },
+    -- Disable the Ctrl-click down event to stop programs from seeing it when a URL is clicked
+    -- {
+    --   event = { Down = { streak = 1, button = "Left" } },
+    --   mods = "CTRL",
+    --   action = wezterm.action.Nop,
+    -- },
+  },
+}
