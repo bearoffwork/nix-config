@@ -1,4 +1,5 @@
 vim.o.number = true
+vim.o.wrap = false
 vim.o.relativenumber = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
@@ -25,7 +26,7 @@ vim.o.cursorline = true
 vim.o.scrolloff = 10
 vim.o.confirm = true
 
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+-- vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",

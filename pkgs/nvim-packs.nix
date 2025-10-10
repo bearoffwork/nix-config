@@ -1,9 +1,29 @@
 {
   lib,
+  pkgs,
   stdenv,
-  startPlugins ? [],
-  optPlugins ? [],
 }: let
+  startPlugins = with pkgs.vimPlugins; [
+    lz-n
+    plenary-nvim
+    catppuccin-nvim
+  ];
+
+  optPlugins = with pkgs.vimPlugins; [
+    blink-cmp
+    conform-nvim
+    diffview-nvim
+    lazydev-nvim
+    mini-nvim
+    neotest
+    nvim-lspconfig
+    oil-nvim
+    telescope-nvim
+    todo-comments-nvim
+    toggleterm-nvim
+    vim-dadbod
+    vim-dadbod-completion
+  ];
   # Define plugins here first
   mkPluginMap = plugins:
     builtins.listToAttrs (map (

@@ -39,7 +39,11 @@
         }
     );
   in {
+    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
+    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+
     nixosModules = import ./modules/nixos;
+
     nixosConfigurations = nixpkgs.lib.listToAttrs (map (hostname: {
         name = hostname;
         value = nixpkgs.lib.nixosSystem {
@@ -63,37 +67,21 @@
       };
     };
 
-    packages = forAllSystems (system: let
-      pkgs = nixpkgsFor.${system};
-    in {
-      homeConfigurations = {
-        "bear@bear-mbw" = home-manager.lib.homeManagerConfiguration {
-          inherit pkgs;
-          extraSpecialArgs = {inherit inputs outputs;};
-          modules = [
-            ./home-manager/home.nix
-          ];
-        };
-      };
-
-      nvim-packs = pkgs.callPackage ./nvimPacks.nix {
-        startPlugins = with pkgs.vimPlugins; [
-          lz-n
-          plenary-nvim
-          catppuccin-nvim
-        ];
-
-        optPlugins = with pkgs.vimPlugins; [
-          blink-cmp
-          conform-nvim
-          lazydev-nvim
-          mini-nvim
-          nvim-lspconfig
-          oil-nvim
-          telescope-nvim
-          todo-comments-nvim
+    homeConfigurations = {
+      "bear@bear-mbw" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgsFor.aarch64-darwin;
+        extraSpecialArgs = {inherit inputs outputs;};
+        modules = [
+          ./home-manager/home.nix
         ];
       };
-    });
+    };
+
+    # packages = forAllSystems (system: let
+    #   pkgs = nixpkgsFor.${system};
+    # in {
+    #   nvim-packs =
+    #     pkgs.callPackage ./nvimPacks.nix {};
+    # });
   };
 }

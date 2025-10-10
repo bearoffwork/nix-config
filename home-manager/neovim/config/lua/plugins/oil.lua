@@ -1,3 +1,5 @@
+---@module "lz.n"
+---@type lz.n.PluginSpec[]
 return {
     {
         "oil.nvim",

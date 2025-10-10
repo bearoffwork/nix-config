@@ -1,3 +1,5 @@
+---@module "lz.n"
+---@type lz.n.PluginSpec[]
 return {
     {
         "telescope.nvim",
@@ -16,6 +18,20 @@ return {
                     require("telescope.builtin").find_files()
                 end,
                 desc = "Telescope find files",
+            },
+            {
+                "<leader>fb",
+                function()
+                    require("telescope.builtin").buffers()
+                end,
+                desc = "Telescope find buffers",
+            },
+            {
+                "<leader>fh",
+                function()
+                    require("telescope.builtin").help_tags()
+                end,
+                desc = "Telescope find help_tags",
             },
         },
         after = function()
