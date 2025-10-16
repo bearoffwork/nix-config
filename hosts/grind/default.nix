@@ -5,22 +5,30 @@
   ...
 }: {
   imports = [
-    outputs.nixosModules.defaults
+    outputs.darwinModules.usual
     ./dnsmasq.nix
     ./nix-darwin.nix
     ./shell.nix
   ];
 
-  nix.settings.trusted-users = ["@admin"];
-  # nix.linux-builder = {
-  #   enable = true;
-  #   ephemeral = true;
-  #   maxJobs = 8;
-  #   config = {
-  #     virtualisation.darwin-builder.diskSize = 30 * 1024;
-  #     virtualisation.darwin-builder.memorySize = 16 * 1024;
-  #   };
-  # };
+  nix = {
+    settings = {
+      trusted-users = ["@admin"];
+      max-jobs = "auto";
+      cores = 0;
+      # extra-platforms = ["aarch64-linux" "x86_64-linux"];
+    };
+    linux-builder = {
+      enable = true;
+      ephemeral = true;
+      maxJobs = 8;
+      config = {
+        virtualisation.darwin-builder.diskSize = 30 * 1024;
+        virtualisation.darwin-builder.memorySize = 16 * 1024;
+        virtualisation.cores = 8;
+      };
+    };
+  };
 
   environment.systemPackages = with pkgs; [
     home-manager

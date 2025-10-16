@@ -1,14 +1,28 @@
 {
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
 
     nix-darwin.url = "github:nix-darwin/nix-darwin";
+    # nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager.url = "github:nix-community/home-manager";
+    # home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
+  };
+
+  nixConfig = {
+    extra-substituters = [
+      "https://nixos-raspberrypi.cachix.org"
+    ];
+    extra-trusted-public-keys = [
+      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
+    ];
   };
 
   outputs = {
@@ -16,6 +30,7 @@
     nixpkgs,
     nix-darwin,
     home-manager,
+    nixos-raspberrypi,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -43,32 +58,44 @@
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
     nixosModules = import ./modules/nixos;
+    darwinModules = import ./modules/darwin;
 
-    nixosConfigurations = nixpkgs.lib.listToAttrs (map (hostname: {
-        name = hostname;
-        value = nixpkgs.lib.nixosSystem {
-          specialArgs = {inherit inputs outputs hostname;};
+    nixosConfigurations =
+      nixpkgs.lib.listToAttrs (map (sysname: {
+          name = sysname;
+          value = nixpkgs.lib.nixosSystem {
+            specialArgs = {inherit inputs outputs sysname;};
+            modules = [
+              ./hosts/${sysname}
+            ];
+          };
+        }) [
+          "play"
+          "hoard"
+        ])
+      // {
+        "den" = nixos-raspberrypi.lib.nixosSystemFull {
+          specialArgs = {
+            inherit inputs outputs nixos-raspberrypi;
+            sysname = "den";
+          };
           modules = [
-            {defaults.trustedUsers = ["bear"];}
-            ./hosts/${hostname}
+            ./hosts/den
           ];
         };
-      }) [
-        "wtwsl"
-        "nas"
-      ]);
+      };
 
     darwinConfigurations = {
-      bear-mbw = nix-darwin.lib.darwinSystem {
+      "grind" = nix-darwin.lib.darwinSystem {
         specialArgs = {inherit inputs outputs self;};
         modules = [
-          ./hosts/bear-mbw
+          ./hosts/grind
         ];
       };
     };
 
     homeConfigurations = {
-      "bear@bear-mbw" = home-manager.lib.homeManagerConfiguration {
+      "bear@grind" = home-manager.lib.homeManagerConfiguration {
         pkgs = nixpkgsFor.aarch64-darwin;
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
