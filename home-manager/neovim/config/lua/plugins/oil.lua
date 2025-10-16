@@ -6,6 +6,13 @@ return {
         event = "VimEnter",
         keys = {
             {
+                "-",
+                function()
+                    require("oil").open()
+                end,
+                desc = "Open Oil buffer",
+            },
+            {
                 "<leader>fo",
                 function()
                     require("oil").open()
