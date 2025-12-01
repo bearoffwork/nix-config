@@ -9,6 +9,10 @@
       ];
       extraGroups = ["wheel"];
     };
+    homepage = {
+      isSystemUser = true;
+      extraGroups = ["sensors"];
+    };
   };
 
   security.sudo.extraRules = [
@@ -26,6 +30,19 @@
         }
         {
           command = "/run/current-system/sw/bin/systemd-run -E LOCALE_ARCHIVE -E NIXOS_INSTALL_BOOTLOADER= --collect --no-ask-password --pipe --quiet --service-type=exec --unit=nixos-rebuild-switch-to-configuration --wait /nix/store/*-nixos-system-*/bin/switch-to-configuration switch";
+          options = ["NOPASSWD"];
+        }
+      ];
+    }
+    {
+      groups = ["sensors"];
+      commands = [
+        {
+          command = "/run/current-system/sw/bin/storcli64 /c0 show temperature J";
+          options = ["NOPASSWD"];
+        }
+        {
+          command = "/run/current-system/sw/bin/storcli64 /c0 show all J";
           options = ["NOPASSWD"];
         }
       ];

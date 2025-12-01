@@ -7,24 +7,20 @@
   ...
 }: {
   imports = let
-    nixos-rpi = inputs.nixos-raspberrypi.nixosModules;
+    nixos-rpi = inputs.nixos-raspberrypi;
   in [
-    outputs.nixosModules.usual
-    nixos-rpi.raspberry-pi-5.base
-    nixos-rpi.raspberry-pi-5.page-size-16k
-    nixos-rpi.raspberry-pi-5.display-vc4
-    nixos-rpi.raspberry-pi-5.bluetooth
-    ./configtxt.nix
-    ./hardware.nix
-    ./kernel.nix
-    ./network.nix
-    ./users.nix
+    nixos-rpi.lib.inject-overlays
+    nixos-rpi.nixosModules.trusted-nix-caches
+    nixos-rpi.nixosModules.nixpkgs-rpi
+
+    # outputs.nixosModules.usual
+    ./system
+    # ./infra
   ];
 
   boot.tmp.useTmpfs = true;
   boot.loader.raspberryPi.bootloader = "kernel";
 
-  time.timeZone = "Asia/Taipei";
   # networking.hostDomain = "hope.home";
 
   services.udev.extraRules = ''

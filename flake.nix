@@ -34,6 +34,7 @@
     ...
   } @ inputs: let
     inherit (self) outputs;
+    lib = import ./lib {inherit inputs outputs self;};
     systems = [
       "aarch64-linux"
       "x86_64-linux"
@@ -61,10 +62,13 @@
     darwinModules = import ./modules/darwin;
 
     nixosConfigurations =
+      # lib.attrsets.mergeAttrsList [
+      #   (lib.x.mkRpiSystem "den")
+      # ];
       nixpkgs.lib.listToAttrs (map (sysname: {
           name = sysname;
           value = nixpkgs.lib.nixosSystem {
-            specialArgs = {inherit inputs outputs sysname;};
+            specialArgs = {inherit inputs outputs sysname lib;};
             modules = [
               ./hosts/${sysname}
             ];
@@ -72,22 +76,15 @@
         }) [
           "play"
           "hoard"
-        ])
-      // {
-        "den" = nixos-raspberrypi.lib.nixosSystemFull {
-          specialArgs = {
-            inherit inputs outputs nixos-raspberrypi;
-            sysname = "den";
-          };
-          modules = [
-            ./hosts/den
-          ];
-        };
-      };
+          "den"
+        ]);
 
     darwinConfigurations = {
       "grind" = nix-darwin.lib.darwinSystem {
-        specialArgs = {inherit inputs outputs self;};
+        specialArgs = {
+          inherit inputs outputs self lib;
+          sysname = "grind";
+        };
         modules = [
           ./hosts/grind
         ];

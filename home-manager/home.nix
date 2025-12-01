@@ -55,6 +55,7 @@
     dust
     dig
     viddy
+    duckdb
   ];
 
   home.sessionPath = [

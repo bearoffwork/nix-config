@@ -1,4 +1,10 @@
-vim.keymap.set("n", "<leader>yc", function()
+vim.keymap.set("n", "<leader>yp", function()
+    local filename = vim.fn.expand("%")
+    vim.fn.setreg("+", filename)
+    print("Yanked path: " .. filename)
+end, { desc = "Yank buffer path" })
+
+vim.keymap.set("n", "<leader>yb", function()
     local filename = vim.fn.expand("%")
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
     local content = "# " .. filename .. "\n" .. table.concat(lines, "\n")

@@ -2,12 +2,11 @@
   config,
   lib,
   pkgs,
-  fn,
   ...
 }: let
   cfg = config.usual;
 in {
-  options.usual.packages.enable = fn.mkUsualOption "systemPackages";
+  options.usual.packages.enable = lib.usual.mkEnableOption "systemPackages";
 
   config = lib.mkIf cfg.packages.enable {
     environment.systemPackages = with pkgs; [

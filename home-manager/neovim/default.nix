@@ -13,8 +13,10 @@
       (pkgs.vimPlugins.nvim-treesitter.withPlugins (p:
         with p; [
           bash
+          css
           dockerfile
           go
+          html
           javascript
           json
           just
@@ -24,12 +26,11 @@
           nix
           php
           python
+          sql
+          toml
           typescript
           xml
           yaml
-          sql
-          html
-          css
         ]))
     ];
     extraPackages = with pkgs; [
@@ -42,6 +43,13 @@
       shfmt
       docker-language-server # from docker team
       docker-compose-language-service # from microsoft
+      basedpyright # py lsp
+      isort # py fmt
+      black # py fmt
+      sqlfluff # sql fmt https://github.com/sqlfluff/sqlfluff
+      sqls # sql lsp https://github.com/sqls-server/sqls
+      sql-formatter
+      taplo # toml fmt
     ];
   };
 
@@ -52,6 +60,6 @@
   };
 
   xdg.dataFile."nvim-packs" = {
-    source = outputs.packages.${pkgs.system}.nvim-packs;
+    source = outputs.packages.${pkgs.stdenv.hostPlatform.system}.nvim-packs;
   };
 }

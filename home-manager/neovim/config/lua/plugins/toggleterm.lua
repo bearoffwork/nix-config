@@ -27,7 +27,7 @@ return {
             },
         },
         after = function()
-            require("toggleterm").setup()
+            require("toggleterm").setup({})
         end,
     },
 }

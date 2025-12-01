@@ -13,10 +13,10 @@
 
   nix = {
     settings = {
-      trusted-users = ["@admin"];
+      download-buffer-size = 524288000;
+      trusted-users = ["bear"];
       max-jobs = "auto";
       cores = 0;
-      # extra-platforms = ["aarch64-linux" "x86_64-linux"];
     };
     linux-builder = {
       enable = true;

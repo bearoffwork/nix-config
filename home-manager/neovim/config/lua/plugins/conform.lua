@@ -16,6 +16,10 @@ return {
                     -- -- You can also customize some of the format options for the filetype
                     -- rust = { "rustfmt", lsp_format = "fallback" },
                     -- You can use a function here to determine the formatters dynamically
+                    sql = { "sql_formatter" },
+                    -- sql = { "sqlfluff" },
+                    python = { "isort", "black" },
+                    toml = { "taplo" },
                     -- python = function(bufnr)
                     --     if require("conform").get_formatter_info("ruff_format", bufnr).available then
                     --         return { "ruff_format" }
@@ -49,6 +53,33 @@ return {
                     },
                     shfmt = {
                         extra_args = { "-i", "4", "-ci", "-bn" },
+                    },
+                    -- sqlfluff = {
+                    --     args = { "format", "-" },
+                    --     stdin = true,
+                    -- },
+                    sql_formatter = {
+                        args = {
+                            "-c",
+                            vim.json.encode({
+                                language = "duckdb",
+                                tabWidth = 4,
+                                useTabs = false,
+                                keywordCase = "upper",
+                                linesBetweenQueries = 1,
+                                newlineBeforeSemicolon = true,
+                                paramTypes = {
+                                    positional = true,
+                                    numbered = {},
+                                    named = {
+                                        ":",
+                                        "@",
+                                        "$", -- duckdb
+                                    },
+                                },
+                            }),
+                        },
+                        -- stdin = true,
                     },
                 },
                 -- Set this to change the default values when calling conform.format()

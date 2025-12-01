@@ -1,12 +1,11 @@
 {
   config,
   lib,
-  fn,
   ...
 }: let
   cfg = config.usual.zsh;
 in {
-  options.usual.zsh.enable = fn.mkUsualOption "zsh";
+  options.usual.zsh.enable = lib.usual.mkEnableOption "zsh";
 
   config = lib.mkIf cfg.enable {
     programs.zsh = {
@@ -15,7 +14,7 @@ in {
       autosuggestions.enable = lib.mkDefault true;
       syntaxHighlighting.enable = lib.mkDefault true;
 
-      interactiveShellInit = fn.mkUsualBefore ''
+      interactiveShellInit = lib.usual.value ''
         bindkey -e
         bindkey "^[[1;5C" forward-word
         bindkey "^[[1;5D" backward-word

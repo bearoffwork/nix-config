@@ -11,6 +11,7 @@ return {
             vim.lsp.enable("bashls")
             vim.lsp.enable("docker_language_server")
             vim.lsp.enable("docker_compose_language_service")
+            vim.lsp.enable("basedpyright")
 
             vim.diagnostic.config({
                 severity_sort = true,

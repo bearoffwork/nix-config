@@ -14,6 +14,11 @@
   # system.defaults.NSGlobalDomain.NSNavPanelExpandedStateForSaveMode2 = true;
   # system.defaults.NSGlobalDomain._HIHideMenuBar = true;
 
+  security.pam.services.sudo_local = {
+    touchIdAuth = true;
+    watchIdAuth = true;
+  };
+
   system.defaults.dock = {
     orientation = "left";
     autohide = true;

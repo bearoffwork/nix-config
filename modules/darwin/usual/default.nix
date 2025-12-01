@@ -1,6 +1,6 @@
 {
   imports = [
-    ../../_lib/shared-module
+    ../../usual
     ./zsh.nix
   ];
 }
