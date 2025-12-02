@@ -62,7 +62,7 @@ return {
 
   -- window
   window_decorations = "RESIZE|INTEGRATED_BUTTONS",
-  -- adjust_window_size_when_changing_font_size = false,
+  adjust_window_size_when_changing_font_size = false,
   window_close_confirmation = "NeverPrompt",
   window_background_opacity = colors.opacity,
   macos_window_background_blur = 40,
