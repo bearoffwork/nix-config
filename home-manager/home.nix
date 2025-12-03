@@ -56,6 +56,7 @@
     dig
     viddy
     duckdb
+    claude-code
   ];
 
   home.sessionPath = [

@@ -58,6 +58,13 @@
     packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
     formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
+    devShells = forAllSystems (system: let
+      pkgs = nixpkgsFor.${system};
+    in {
+      php84 = import ./shells/php84.nix {inherit pkgs;};
+      php74 = import ./shells/php74.nix {inherit pkgs;};
+    });
+
     nixosModules = import ./modules/nixos;
     darwinModules = import ./modules/darwin;
 

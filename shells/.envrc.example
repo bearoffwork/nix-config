@@ -1,0 +1,15 @@
+# Example .envrc file for using dev shells with nix-direnv
+#
+# Usage:
+# 1. Copy this file to your project directory as `.envrc`
+# 2. Uncomment the shell you want to use
+# 3. Run `direnv allow` in your project directory
+
+# For PHP 8.4 + Node.js projects
+# use flake system#php84
+
+# For legacy PHP 7.4 projects
+# use flake system#php74
+
+# Or using full path:
+# use flake /Users/bear/src/p/nix-config#php84
