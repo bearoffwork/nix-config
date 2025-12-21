@@ -93,6 +93,8 @@ return {
       mods = "CTRL|SHIFT",
       action = wezterm.action.ToggleFullScreen,
     },
+    -- for line breaking
+    { key = "Enter", mods = "SHIFT", action = wezterm.action({ SendString = "\x1b\r" }) },
   },
 
   mouse_bindings = {

@@ -1,7 +1,7 @@
 {pkgs, ...}: {
   imports = [
     ./docker.nix
-    ./skhd.nix
+    # ./skhd.nix
   ];
 
   home.packages = with pkgs; [
