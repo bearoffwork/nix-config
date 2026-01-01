@@ -12,25 +12,13 @@
     home-manager.url = "github:nix-community/home-manager";
     # home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    # nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
   };
-
-  # nixConfig = {
-  #   extra-substituters = [
-  #     "https://nixos-raspberrypi.cachix.org"
-  #   ];
-  #   extra-trusted-public-keys = [
-  #     "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
-  #   ];
-  # };
 
   outputs = {
     self,
     nixpkgs,
     nix-darwin,
     home-manager,
-    # nixos-raspberrypi,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -60,31 +48,18 @@
     nixosModules = import ./modules/nixos;
     darwinModules = import ./modules/darwin;
 
-    nixosConfigurations =
-      nixpkgs.lib.listToAttrs (map (sysname: {
-          name = sysname;
-          value = nixpkgs.lib.nixosSystem {
-            specialArgs = {inherit inputs outputs sysname;};
-            modules = [
-              ./hosts/${sysname}
-            ];
-          };
-        }) [
-          "bench"
-          "hoard"
-        ])
-      # // {
-      #   "den" = nixos-raspberrypi.lib.nixosSystemFull {
-      #     specialArgs = {
-      #       inherit inputs outputs nixos-raspberrypi;
-      #       sysname = "den";
-      #     };
-      #     modules = [
-      #       ./hosts/den
-      #     ];
-      #   };
-      # }
-      ;
+    nixosConfigurations = nixpkgs.lib.listToAttrs (map (sysname: {
+        name = sysname;
+        value = nixpkgs.lib.nixosSystem {
+          specialArgs = {inherit inputs outputs sysname;};
+          modules = [
+            ./hosts/${sysname}
+          ];
+        };
+      }) [
+        "bench"
+        "hoard"
+      ]);
 
     darwinConfigurations = {
       "grind" = nix-darwin.lib.darwinSystem {
