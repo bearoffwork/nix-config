@@ -3,7 +3,8 @@
   self,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     outputs.darwinModules.usual
     ./dnsmasq.nix
@@ -13,7 +14,7 @@
 
   nix = {
     settings = {
-      trusted-users = ["@admin"];
+      trusted-users = [ "@admin" ];
       max-jobs = "auto";
       cores = 0;
       # extra-platforms = ["aarch64-linux" "x86_64-linux"];

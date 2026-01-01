@@ -3,9 +3,11 @@
   lib,
   fn,
   ...
-}: let
+}:
+let
   cfg = config.usual.zsh;
-in {
+in
+{
   options.usual.zsh.enable = fn.mkUsualOption "zsh";
 
   config = lib.mkIf cfg.enable {

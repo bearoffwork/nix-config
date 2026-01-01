@@ -4,9 +4,11 @@
   pkgs,
   fn,
   ...
-}: let
+}:
+let
   cfg = config.usual;
-in {
+in
+{
   options.usual.packages.enable = fn.mkUsualOption "systemPackages";
 
   config = lib.mkIf cfg.packages.enable {

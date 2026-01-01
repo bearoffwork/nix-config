@@ -8,7 +8,7 @@ return {
                 -- Map of filetype to formatters
                 formatters_by_ft = {
                     lua = { "stylua" },
-                    nix = { "alejandra" },
+                    nix = { "nixfmt" },
                     sh = { "shfmt" },
                     json = { "jq" },
                     -- -- Conform will run multiple formatters sequentially

@@ -2,7 +2,8 @@
   config,
   pkgs,
   ...
-}: let
+}:
+let
   lock-false = {
     Value = false;
     Status = "locked";
@@ -11,17 +12,19 @@
     Value = true;
     Status = "locked";
   };
-in {
+in
+{
   home.packages = [
     pkgs.firefoxpwa
   ];
-  programs .firefox = {
+  programs.firefox = {
     enable = true;
-    languagePacks = ["zh-TW" "en-US"];
+    languagePacks = [
+      "zh-TW"
+      "en-US"
+    ];
 
-    /*
-    ---- POLICIES ----
-    */
+    # ---- POLICIES ----
     # Check about:policies#documentation for options.
     policies = {
       DisableTelemetry = true;
@@ -43,9 +46,7 @@ in {
       # DisplayMenuBar = "default-off"; # alternatives: "always", "never" or "default-on"
       # SearchBar = "unified"; # alternative: "separate"
 
-      /*
-      ---- EXTENSIONS ----
-      */
+      # ---- EXTENSIONS ----
       # Check about:support for extension/add-on ID strings.
       # Valid strings for installation_mode are "allowed", "blocked",
       # "force_installed" and "normal_installed".
@@ -68,9 +69,7 @@ in {
         # };
       };
 
-      /*
-      ---- PREFERENCES ----
-      */
+      # ---- PREFERENCES ----
       # Check about:config for options.
       Preferences = {
         # "browser.contentblocking.category" = { Value = "strict"; Status = "locked"; };

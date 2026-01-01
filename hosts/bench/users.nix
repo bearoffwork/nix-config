@@ -1,7 +1,11 @@
-{...}: {
+{ ... }:
+{
   users.users = {
     bear = {
-      extraGroups = ["wheel" "podman"];
+      extraGroups = [
+        "wheel"
+        "podman"
+      ];
     };
   };
 }

@@ -1,7 +1,9 @@
-{lib, ...}: let
-in {
+{ lib, ... }:
+let
+in
+{
   _module.args = {
-    fn = import ../../fn.nix {inherit lib;};
+    fn = import ../../fn.nix { inherit lib; };
   };
 
   imports = [
@@ -10,5 +12,5 @@ in {
     ./packages.nix
   ];
 
-  usual.trustedUsers = lib.mkDefault ["bear"];
+  usual.trustedUsers = lib.mkDefault [ "bear" ];
 }

@@ -4,7 +4,8 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     # ./cli/aws.nix
     ./cli/direnv.nix
@@ -19,9 +20,7 @@
   home = {
     username = "bear";
     homeDirectory =
-      if pkgs.stdenv.isDarwin
-      then "/Users/${config.home.username}"
-      else "/home/${config.home.username}";
+      if pkgs.stdenv.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}";
   };
 
   xdg.configFile."home-manager" = {

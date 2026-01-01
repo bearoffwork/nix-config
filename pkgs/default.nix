@@ -1,3 +1,3 @@
 pkgs: {
-  nvim-packs = pkgs.callPackage ./nvim-packs.nix {};
+  nvim-packs = pkgs.callPackage ./nvim-packs.nix { };
 }

@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ./starship.nix
   ];
@@ -113,7 +114,7 @@
       enable = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
 
     fzf = {

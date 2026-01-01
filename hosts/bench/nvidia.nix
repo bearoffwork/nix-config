@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   environment.sessionVariables = {
     CUDA_PATH = "${pkgs.cudatoolkit}";
     EXTRA_LDFLAGS = "-L/lib -L${pkgs.linuxPackages.nvidia_x11}/lib";
@@ -11,7 +12,7 @@
     MESA_D3D12_DEFAULT_ADAPTER_NAME = "Nvidia";
   };
 
-  services.xserver.videoDrivers = ["nvidia"];
+  services.xserver.videoDrivers = [ "nvidia" ];
   hardware.nvidia.open = true;
   hardware.nvidia-container-toolkit = {
     enable = true;
@@ -21,7 +22,7 @@
   systemd.services = {
     nvidia-cdi-generator = {
       description = "Generate nvidia cdi";
-      wantedBy = ["docker.service"];
+      wantedBy = [ "docker.service" ];
       serviceConfig = {
         Type = "oneshot";
         ExecStart = "${pkgs.nvidia-docker}/bin/nvidia-ctk cdi generate --output=/etc/cdi/nvidia.yaml --nvidia-ctk-path=${pkgs.nvidia-container-toolkit}/bin/nvidia-ctk";
@@ -31,6 +32,6 @@
 
   virtualisation.docker = {
     daemon.settings.features.cdi = true;
-    daemon.settings.cdi-spec-dirs = ["/etc/cdi"];
+    daemon.settings.cdi-spec-dirs = [ "/etc/cdi" ];
   };
 }

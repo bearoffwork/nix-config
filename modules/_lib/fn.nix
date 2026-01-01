@@ -1,5 +1,7 @@
-{lib, ...}: {
-  mkUsualOption = name:
+{ lib, ... }:
+{
+  mkUsualOption =
+    name:
     lib.mkOption {
       default = true;
       example = true;

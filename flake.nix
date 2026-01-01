@@ -14,23 +14,25 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    nix-darwin,
-    home-manager,
-    ...
-  } @ inputs: let
-    inherit (self) outputs;
-    systems = [
-      "aarch64-linux"
-      "x86_64-linux"
-      "aarch64-darwin"
-      "x86_64-darwin"
-    ];
-    forAllSystems = nixpkgs.lib.genAttrs systems;
-    nixpkgsFor = forAllSystems (
-      system:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      nix-darwin,
+      home-manager,
+      ...
+    }@inputs:
+    let
+      inherit (self) outputs;
+      systems = [
+        "aarch64-linux"
+        "x86_64-linux"
+        "aarch64-darwin"
+        "x86_64-darwin"
+      ];
+      forAllSystems = nixpkgs.lib.genAttrs systems;
+      nixpkgsFor = forAllSystems (
+        system:
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
@@ -40,58 +42,62 @@
             # outputs.overlays.unstable-packages
           ];
         }
-    );
-  in {
-    packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
-    formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+      );
+    in
+    {
+      packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
 
-    nixosModules = import ./modules/nixos;
-    darwinModules = import ./modules/darwin;
+      nixosModules = import ./modules/nixos;
+      darwinModules = import ./modules/darwin;
 
-    nixosConfigurations = nixpkgs.lib.listToAttrs (map (sysname: {
-        name = sysname;
-        value = nixpkgs.lib.nixosSystem {
-          specialArgs = {inherit inputs outputs sysname;};
+      nixosConfigurations = nixpkgs.lib.listToAttrs (
+        map
+          (sysname: {
+            name = sysname;
+            value = nixpkgs.lib.nixosSystem {
+              specialArgs = { inherit inputs outputs sysname; };
+              modules = [
+                ./hosts/${sysname}
+              ];
+            };
+          })
+          [
+            "bench"
+            "hoard"
+          ]
+      );
+
+      darwinConfigurations = {
+        "grind" = nix-darwin.lib.darwinSystem {
+          specialArgs = { inherit inputs outputs self; };
           modules = [
-            ./hosts/${sysname}
+            ./hosts/grind
           ];
         };
-      }) [
-        "bench"
-        "hoard"
-      ]);
-
-    darwinConfigurations = {
-      "grind" = nix-darwin.lib.darwinSystem {
-        specialArgs = {inherit inputs outputs self;};
-        modules = [
-          ./hosts/grind
-        ];
       };
+
+      homeConfigurations = {
+        "bear@grind" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgsFor.aarch64-darwin;
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            ./home-manager/home.nix
+          ];
+        };
+        "bear@bench" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgsFor.x86_64-linux;
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            ./home-manager/bench.nix
+          ];
+        };
+      };
+
+      # packages = forAllSystems (system: let
+      #   pkgs = nixpkgsFor.${system};
+      # in {
+      #   nvim-packs =
+      #     pkgs.callPackage ./nvimPacks.nix {};
+      # });
     };
-
-    homeConfigurations = {
-      "bear@grind" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgsFor.aarch64-darwin;
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
-          ./home-manager/home.nix
-        ];
-      };
-      "bear@bench" = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgsFor.x86_64-linux;
-        extraSpecialArgs = {inherit inputs outputs;};
-        modules = [
-          ./home-manager/bench.nix
-        ];
-      };
-    };
-
-    # packages = forAllSystems (system: let
-    #   pkgs = nixpkgsFor.${system};
-    # in {
-    #   nvim-packs =
-    #     pkgs.callPackage ./nvimPacks.nix {};
-    # });
-  };
 }
