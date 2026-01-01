@@ -40,7 +40,7 @@
     wget
     rsync
 
-    docker-client
+    # docker-client
     # amazon-ecr-credential-helper
     # dive
 
@@ -55,6 +55,7 @@
     dust
     dig
     viddy
+    claude-code
   ];
 
   home.sessionPath = [
@@ -63,6 +64,7 @@
 
   home.shellAliases = {
     j = "just";
+    hm = "home-manager";
   };
 
   programs.home-manager.enable = true;
