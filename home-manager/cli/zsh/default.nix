@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ./starship.nix
   ];
@@ -47,9 +48,6 @@
       # Let Home Manager manage zsh environment, it will generate `.zshrc` and `.zshenv` for you.
       enable = true;
 
-      # set default keymap to emacs
-      defaultKeymap = "emacs";
-
       # Alternative ZDOTDIR
       dotDir = "${config.xdg.configHome}/zsh";
 
@@ -83,6 +81,7 @@
             '.' '${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh'
 
             # use ctrl + arrow keys to move between words
+            bindkey -e
             bindkey "^[[1;5C" forward-word
             bindkey "^[[1;5D" backward-word
           '')
@@ -113,7 +112,7 @@
       enable = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
 
     fzf = {

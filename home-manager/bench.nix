@@ -7,15 +7,28 @@
 }:
 {
   imports = [
-    ./cli/aws.nix
+    # ./cli/aws.nix
     ./cli/direnv.nix
     ./cli/git.nix
     ./cli/sops.nix
     ./cli/zsh
-    ./darwin
+    # ./darwin
     ./neovim
-    ./wezterm
+    # ./wezterm
   ];
+
+  systemd.user.sockets.podman = {
+    Unit = {
+      Description = "Podman API Socket";
+    };
+    Socket = {
+      ListenStream = "%t/podman/podman.sock";
+      SocketMode = "0660";
+    };
+    Install = {
+      WantedBy = [ "sockets.target" ];
+    };
+  };
 
   home = {
     username = "bear";
@@ -30,33 +43,31 @@
   home.packages = with pkgs; [
     coreutils
     gnused
-    gnumake
+    # gnumake
     git
     ripgrep
     fd
     bat
-    rsync
     curl
     wget
+    rsync
 
-    docker-client
-    amazon-ecr-credential-helper
-    dive
+    # docker-client
+    # amazon-ecr-credential-helper
+    # dive
 
-    wireguard-tools
+    # wireguard-tools
     # nixos-rebuild
 
-    xmlstarlet
+    # xmlstarlet
     just
     htop
-    nvtopPackages.apple
-    llama-cpp
+    # nvtopPackages.apple
+    # llama-cpp
     dust
     dig
     viddy
-    duckdb
     claude-code
-    github-copilot-cli
   ];
 
   home.sessionPath = [
@@ -65,6 +76,7 @@
 
   home.shellAliases = {
     j = "just";
+    hm = "home-manager";
   };
 
   programs.home-manager.enable = true;
@@ -72,10 +84,10 @@
   programs.bash.enable = true;
   programs.zsh.enable = true;
 
-  programs.google-chrome = {
-    enable = true;
-    package = pkgs.google-chrome;
-  };
+  # programs.google-chrome = {
+  #   enable = true;
+  #   package = pkgs.google-chrome;
+  # };
 
   systemd.user.startServices = "sd-switch";
   home.stateVersion = "25.05";

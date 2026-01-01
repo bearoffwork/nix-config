@@ -3,7 +3,8 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.usual;
 in {
   options.usual.packages.enable = lib.usual.mkEnableOption "systemPackages";

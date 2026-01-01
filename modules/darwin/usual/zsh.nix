@@ -2,7 +2,8 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.usual.zsh;
 in {
   options.usual.zsh.enable = lib.usual.mkEnableOption "zsh";

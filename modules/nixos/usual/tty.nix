@@ -2,10 +2,11 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   console = {
     earlySetup = lib.mkDefault true;
-    packages = lib.mkDefault [pkgs.terminus_font];
+    packages = lib.mkDefault [ pkgs.terminus_font ];
     font = lib.mkDefault "ter-u32n";
     # Modified catppuccin colors
     colors = lib.mkDefault [

@@ -12,8 +12,6 @@
     home-manager.url = "github:nix-community/home-manager/master";
     # home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-
-    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
   };
 
   nixConfig = {
@@ -47,7 +45,6 @@
         system:
         import nixpkgs {
           inherit system;
-          config.allowUnfree = true;
           overlays = [
             # outputs.overlays.additions
             # outputs.overlays.modifications

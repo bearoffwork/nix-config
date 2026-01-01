@@ -6,5 +6,5 @@ in {
     ./packages.nix
   ];
 
-  usual.trustedUsers = lib.mkDefault ["bear"];
+  usual.trustedUsers = lib.mkDefault [ "bear" ];
 }
