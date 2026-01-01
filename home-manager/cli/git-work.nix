@@ -22,6 +22,13 @@
       userName = "Bear.Y";
       userEmail = "codes@bearoff.wrok";
 
+      includes = [
+        {
+          condition = "hasconfig:remote.origin.url:https://github.com/euimoney/*";
+          contents.user.email = "bear@eui.money";
+        }
+      ];
+
       extraConfig = {
         # Opinionated git configuration.
         init.defaultBranch = "main";

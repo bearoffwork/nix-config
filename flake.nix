@@ -13,24 +13,24 @@
     # home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
+    # nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
   };
 
-  nixConfig = {
-    extra-substituters = [
-      "https://nixos-raspberrypi.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
-    ];
-  };
+  # nixConfig = {
+  #   extra-substituters = [
+  #     "https://nixos-raspberrypi.cachix.org"
+  #   ];
+  #   extra-trusted-public-keys = [
+  #     "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
+  #   ];
+  # };
 
   outputs = {
     self,
     nixpkgs,
     nix-darwin,
     home-manager,
-    nixos-raspberrypi,
+    # nixos-raspberrypi,
     ...
   } @ inputs: let
     inherit (self) outputs;
@@ -70,20 +70,21 @@
             ];
           };
         }) [
-          "play"
+          "bench"
           "hoard"
         ])
-      // {
-        "den" = nixos-raspberrypi.lib.nixosSystemFull {
-          specialArgs = {
-            inherit inputs outputs nixos-raspberrypi;
-            sysname = "den";
-          };
-          modules = [
-            ./hosts/den
-          ];
-        };
-      };
+      # // {
+      #   "den" = nixos-raspberrypi.lib.nixosSystemFull {
+      #     specialArgs = {
+      #       inherit inputs outputs nixos-raspberrypi;
+      #       sysname = "den";
+      #     };
+      #     modules = [
+      #       ./hosts/den
+      #     ];
+      #   };
+      # }
+      ;
 
     darwinConfigurations = {
       "grind" = nix-darwin.lib.darwinSystem {
@@ -100,6 +101,13 @@
         extraSpecialArgs = {inherit inputs outputs;};
         modules = [
           ./home-manager/home.nix
+        ];
+      };
+      "bear@bench" = home-manager.lib.homeManagerConfiguration {
+        pkgs = nixpkgsFor.x86_64-linux;
+        extraSpecialArgs = {inherit inputs outputs;};
+        modules = [
+          ./home-manager/bench.nix
         ];
       };
     };
