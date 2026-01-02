@@ -52,6 +52,6 @@
   };
 
   xdg.dataFile."nvim-packs" = {
-    source = outputs.packages.${pkgs.system}.nvim-packs;
+    source = outputs.packages.${pkgs.stdenv.hostPlatform.system}.nvim-packs;
   };
 }

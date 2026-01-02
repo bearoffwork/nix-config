@@ -17,6 +17,19 @@
     # ./wezterm
   ];
 
+  systemd.user.sockets.podman = {
+    Unit = {
+      Description = "Podman API Socket";
+    };
+    Socket = {
+      ListenStream = "%t/podman/podman.sock";
+      SocketMode = "0660";
+    };
+    Install = {
+      WantedBy = [ "sockets.target" ];
+    };
+  };
+
   home = {
     username = "bear";
     homeDirectory =
