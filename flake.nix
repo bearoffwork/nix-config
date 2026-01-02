@@ -35,7 +35,6 @@
         system:
         import nixpkgs {
           inherit system;
-          config.allowUnfree = true;
           overlays = [
             # outputs.overlays.additions
             # outputs.overlays.modifications
@@ -99,5 +98,19 @@
       #   nvim-packs =
       #     pkgs.callPackage ./nvimPacks.nix {};
       # });
+
+      devShells = forAllSystems (
+        system:
+        let
+          pkgs = nixpkgsFor.${system};
+        in
+        {
+          # CUDA development shell
+          cuda = import ./shells/cuda.nix { inherit pkgs; };
+
+          # llama.cpp with CUDA support
+          llama = import ./shells/llama.nix { inherit pkgs; };
+        }
+      );
     };
 }

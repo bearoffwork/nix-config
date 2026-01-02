@@ -358,8 +358,6 @@
   #   fi
   # '';
   #
-  # nixpkgs.config.allowUnfree = true;
-  #
   # nixpkgs.overlays = [
   #   (self: super: {
   #     vim_configurable = super.vim_configurable.override {
