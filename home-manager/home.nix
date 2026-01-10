@@ -45,7 +45,7 @@
     dive
 
     wireguard-tools
-    nixos-rebuild
+    # nixos-rebuild
 
     xmlstarlet
     just
@@ -57,6 +57,7 @@
     viddy
     duckdb
     claude-code
+    github-copilot-cli
   ];
 
   home.sessionPath = [

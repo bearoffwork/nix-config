@@ -3,15 +3,16 @@
   config,
   pkgs,
   ...
-}: {
+}:
+{
   programs.neovim = {
     enable = true;
     defaultEditor = true;
     viAlias = true;
     withNodeJs = true;
     plugins = with pkgs.vimPlugins; [
-      (pkgs.vimPlugins.nvim-treesitter.withPlugins (p:
-        with p; [
+      (pkgs.vimPlugins.nvim-treesitter.withPlugins (
+        p: with p; [
           bash
           css
           dockerfile
@@ -31,14 +32,15 @@
           typescript
           xml
           yaml
-        ]))
+        ]
+      ))
     ];
     extraPackages = with pkgs; [
       tree-sitter
       lua-language-server
       stylua
       nixd
-      alejandra
+      nixfmt-rfc-style
       bash-language-server
       shfmt
       docker-language-server # from docker team
@@ -54,9 +56,7 @@
   };
 
   xdg.configFile."nvim" = {
-    source =
-      config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/src/p/nix-config/home-manager/neovim/config";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/p/nix-config/home-manager/neovim/config";
   };
 
   xdg.dataFile."nvim-packs" = {

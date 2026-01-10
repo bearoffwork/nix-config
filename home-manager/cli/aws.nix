@@ -7,6 +7,22 @@
         region = "ap-northeast-1";
         output = "json";
       };
+      "profile agent-svc" = {
+        region = "ap-northeast-1";
+        output = "json";
+      };
+      "profile tw-apne1-kyc-agent" = {
+        role_arn = "arn:aws:iam::026374454234:role/kyc-agent";
+        source_profile = "tw-apne1";
+        region = "ap-northeast-1";
+        output = "json";
+      };
+      "profile tw-apne1-cwro" = {
+        role_arn = "arn:aws:iam::026374454234:role/cloudwatch-readonly";
+        source_profile = "tw-apne1";
+        region = "ap-northeast-1";
+        output = "json";
+      };
       "profile tw-ape2" = {
         region = "ap-east-2";
         output = "json";

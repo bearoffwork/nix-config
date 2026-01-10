@@ -18,6 +18,7 @@
     neotest
     nvim-lspconfig
     oil-nvim
+    render-markdown-nvim
     telescope-nvim
     todo-comments-nvim
     toggleterm-nvim

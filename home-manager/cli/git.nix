@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     git
     gh
@@ -28,7 +29,27 @@
 
       settings = {
         user.name = "Bear.Y";
-        user.email = "codes@bearoff.wrok";
+        user.email = "code@bearoff.work";
+
+        core = {
+          fsmonitor = true;
+          untrackedcache = true;
+          preloadindex = true;
+        };
+
+        protocol = {
+          version = 2;
+        };
+
+        fetch = {
+          parallel = 8;
+        };
+
+        maintenance = {
+          auto = true;
+          strategy = "incremental";
+          repo = [ "/Users/bear/src/o/nixpkgs" ];
+        };
 
         init.defaultBranch = "main";
         pull.rebase = true;

@@ -3,7 +3,8 @@
   self,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     outputs.darwinModules.usual
     ./dnsmasq.nix
@@ -11,12 +12,15 @@
     ./shell.nix
   ];
 
+  usual.zsh.enable = false;
+
   nix = {
     settings = {
       download-buffer-size = 524288000;
-      trusted-users = ["bear"];
+      trusted-users = [ "bear" ];
       max-jobs = "auto";
       cores = 0;
+      sandbox = true;
     };
     linux-builder = {
       enable = true;

@@ -89,6 +89,13 @@ return {
 
   keys = {
     {
+      key = "m",
+      mods = "CTRL|SHIFT",
+      action = wezterm.action.SpawnCommandInNewTab({
+        args = { "nvim", "+set wrap ft=markdown" },
+      }),
+    },
+    {
       key = "+",
       mods = "CTRL|SHIFT",
       action = wezterm.action.ToggleFullScreen,
