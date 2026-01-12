@@ -1,5 +1,4 @@
 {
-  outputs,
   config,
   pkgs,
   ...
@@ -60,6 +59,6 @@
   };
 
   xdg.dataFile."nvim-packs" = {
-    source = outputs.packages.${pkgs.stdenv.hostPlatform.system}.nvim-packs;
+    source = pkgs.callPackage ./nvim-packs.nix {};
   };
 }

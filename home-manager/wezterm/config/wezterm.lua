@@ -96,6 +96,16 @@ return {
       }),
     },
     {
+      key = "LeftArrow",
+      mods = "CTRL|SHIFT",
+      action = wezterm.action.MoveTabRelative(-1),
+    },
+    {
+      key = "RightArrow",
+      mods = "CTRL|SHIFT",
+      action = wezterm.action.MoveTabRelative(1),
+    },
+    {
       key = "+",
       mods = "CTRL|SHIFT",
       action = wezterm.action.ToggleFullScreen,
