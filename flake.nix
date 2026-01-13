@@ -1,26 +1,21 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
-    nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
 
-    nix-darwin.url = "github:nix-darwin/nix-darwin";
-    # nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
+    # nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
+    nixos-wsl.url = "github:nix-community/NixOS-WSL/release-25.11";
+    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
+
+    # nix-darwin.url = "github:nix-darwin/nix-darwin";
+    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
     home-manager.url = "github:nix-community/home-manager/master";
     # home-manager.url = "github:nix-community/home-manager/release-25.05";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
-  };
 
-  nixConfig = {
-    extra-substituters = [
-      "https://nixos-raspberrypi.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
-    ];
+    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
   };
 
   outputs =
@@ -55,18 +50,7 @@
     in
     {
       # packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
-
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = nixpkgsFor.${system};
-        in
-        {
-          php84 = import ./shells/php84.nix { inherit pkgs; };
-          php74 = import ./shells/php74.nix { inherit pkgs; };
-        }
-      );
+      # formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
 
       nixosModules = import ./modules/nixos;
       darwinModules = import ./modules/darwin;
@@ -94,9 +78,10 @@
               };
             })
             [
-              "play"
+              "bench"
               "hoard"
               "den"
+              "fw"
             ]
         );
 
