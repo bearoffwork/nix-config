@@ -3,6 +3,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -16,6 +17,14 @@
     ./neovim
     ./wezterm
   ];
+
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "claude-code"
+      "google-chrome"
+      "github-copilot-cli"
+    ];
 
   home = {
     username = "bear";

@@ -20,17 +20,29 @@
 
   wsl.enable = true;
   wsl.defaultUser = "bear";
-  # wsl.useWindowsDriver = true;
+  wsl.useWindowsDriver = true;
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true;
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:
-    lib.hasPrefix "cudatoolkit" (lib.getName pkg)
-    || lib.hasPrefix "cuda-merged" (lib.getName pkg)
-    || lib.hasPrefix "cudnn" (lib.getName pkg)
-    || lib.hasPrefix "nvidia-x11" (lib.getName pkg)
-    || lib.hasPrefix "nvidia" (lib.getName pkg);
+    let
+      name = lib.getName pkg;
+    in
+    lib.hasPrefix "cuda" name
+    || lib.hasPrefix "libcublas" name
+    || lib.hasPrefix "libcudnn" name
+    || lib.hasPrefix "libcufft" name
+    || lib.hasPrefix "libcufile" name
+    || lib.hasPrefix "libcurand" name
+    || lib.hasPrefix "libcusolver" name
+    || lib.hasPrefix "libcusparse" name
+    || lib.hasPrefix "libcutensor" name
+    || lib.hasPrefix "libnpp" name
+    || lib.hasPrefix "libnvjitlink" name
+    || lib.hasPrefix "libnvjpeg" name
+    || lib.hasPrefix "libnvidia" name
+    || lib.hasPrefix "nvidia" name;
 
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.05";

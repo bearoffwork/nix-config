@@ -3,6 +3,7 @@
 {
   config,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -16,6 +17,13 @@
     ./neovim
     # ./wezterm
   ];
+
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "claude-code"
+      "google-chrome"
+    ];
 
   systemd.user.sockets.podman = {
     Unit = {

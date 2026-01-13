@@ -1,18 +1,18 @@
 {
   inputs = {
     # nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
 
     # nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
     nixos-wsl.url = "github:nix-community/NixOS-WSL/release-25.11";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
 
     # nix-darwin.url = "github:nix-darwin/nix-darwin";
-    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
+    nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.11";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
 
-    home-manager.url = "github:nix-community/home-manager/master";
-    # home-manager.url = "github:nix-community/home-manager/release-25.05";
+    # home-manager.url = "github:nix-community/home-manager/master";
+    home-manager.url = "github:nix-community/home-manager/release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     nixos-hardware.url = "github:NixOS/nixos-hardware/master";
@@ -108,6 +108,13 @@
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             ./home-manager/home.nix
+          ];
+        };
+        "bear@bench" = home-manager.lib.homeManagerConfiguration {
+          pkgs = nixpkgsFor.x86_64-linux;
+          extraSpecialArgs = { inherit inputs outputs; };
+          modules = [
+            ./home-manager/bench.nix
           ];
         };
       };
