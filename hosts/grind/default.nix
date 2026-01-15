@@ -6,13 +6,10 @@
 }:
 {
   imports = [
-    outputs.darwinModules.usual
     ./dnsmasq.nix
     ./nix-darwin.nix
     ./shell.nix
   ];
-
-  usual.zsh.enable = false;
 
   nix = {
     settings = {

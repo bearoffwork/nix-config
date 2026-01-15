@@ -1,3 +1,0 @@
-{
-  usual = import ./usual;
-}

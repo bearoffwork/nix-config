@@ -37,8 +37,13 @@ return {
         after = function()
             require("telescope").setup({
                 pickers = {
-                    find_files = { theme = "ivy" },
-                    live_grep = { theme = "ivy" },
+                    find_files = {
+                        theme = "ivy",
+                        hidden = true,
+                    },
+                    live_grep = {
+                        theme = "ivy",
+                    },
                 },
             })
             -- Any telescope-specific setup

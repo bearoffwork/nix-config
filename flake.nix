@@ -1,140 +1,141 @@
 {
   inputs = {
-    nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    # nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.05";
+    # Nixpkgs branches - nixpkgs = stable, nixpkgs-unstable = bleeding edge
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-25.11";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+
+    # Hardware configurations
+    nixos-hardware.url = "github:NixOS/nixos-hardware?ref=master";
+
+    # System management
+    nix-darwin.url = "github:nix-darwin/nix-darwin?ref=master";
+    nix-darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
     nixos-wsl.url = "github:nix-community/NixOS-WSL/main";
-    nixos-hardware.url = "github:NixOS/nixos-hardware/master";
+    nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
 
-    nix-darwin.url = "github:nix-darwin/nix-darwin";
-    # nix-darwin.url = "github:nix-darwin/nix-darwin/nix-darwin-25.05";
-    nix-darwin.inputs.nixpkgs.follows = "nixpkgs";
-
-    home-manager.url = "github:nix-community/home-manager/master";
-    # home-manager.url = "github:nix-community/home-manager/release-25.05";
+    # Home management - separate stable and unstable versions
+    home-manager.url = "github:nix-community/home-manager?ref=release-25.11";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
-    nixos-raspberrypi.url = "github:nvmd/nixos-raspberrypi/main";
-  };
+    home-manager-unstable.url = "github:nix-community/home-manager?ref=master";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
-  nixConfig = {
-    extra-substituters = [
-      "https://nixos-raspberrypi.cachix.org"
-    ];
-    extra-trusted-public-keys = [
-      "nixos-raspberrypi.cachix.org-1:4iMO9LXa8BqhU+Rpg6LQKiGa2lsNh/j2oiYLNOQ5sPI="
-    ];
+    # Secrets management
+    sops-nix.url = "github:Mic92/sops-nix?ref=master";
+    sops-nix.inputs.nixpkgs.follows = "nixpkgs";
+
+    # Disk management
+    disko.url = "github:nix-community/disko?ref=master";
+    disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
     {
       self,
       nixpkgs,
+      nixpkgs-unstable,
       nix-darwin,
       home-manager,
+      home-manager-unstable,
       ...
     }@inputs:
     let
       inherit (self) outputs;
-      lib = import ./lib { inherit inputs outputs self; };
-      systems = [
-        "aarch64-linux"
-        "x86_64-linux"
-        "aarch64-darwin"
-        "x86_64-darwin"
-      ];
-      forAllSystems = nixpkgs.lib.genAttrs systems;
-      nixpkgsFor = forAllSystems (
+
+      forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+
+      overlays = {
+        unstable-packages = final: _prev: {
+          unstable = import inputs.nixpkgs-unstable {
+            system = final.system;
+          };
+        };
+      };
+
+      modules = import ./modules/top-level/all-modules.nix { inherit (nixpkgs) lib; };
+
+      pkgsFor = forAllSystems (
         system:
-        import nixpkgs {
+        import nixpkgs-unstable {
           inherit system;
-          config.allowUnfree = true;
-          overlays = [
-            # outputs.overlays.additions
-            # outputs.overlays.modifications
-            # outputs.overlays.unstable-packages
-          ];
         }
       );
     in
     {
-      # packages = forAllSystems (system: import ./pkgs nixpkgs.legacyPackages.${system});
-      formatter = forAllSystems (system: nixpkgs.legacyPackages.${system}.alejandra);
+      # Export overlays and modules for reuse
+      inherit overlays modules;
 
+      # Formatter for each system
+      formatter = forAllSystems (system: pkgsFor.${system}.nixfmt);
+
+      # Development shells for each system
       devShells = forAllSystems (
         system:
         let
-          pkgs = nixpkgsFor.${system};
+          pkgs = pkgsFor.${system};
         in
         {
-          php84 = import ./shells/php84.nix { inherit pkgs; };
-          php74 = import ./shells/php74.nix { inherit pkgs; };
+          default = pkgs.mkShell {
+            buildInputs = with pkgs; [
+              nixfmt
+              nil
+            ];
+          };
         }
       );
 
-      nixosModules = import ./modules/nixos;
-      darwinModules = import ./modules/darwin;
+      # NixOS systems use stable with unstable overlay
+      nixosConfigurations = nixpkgs.lib.listToAttrs (
+        map
+          (sysname: {
+            name = sysname;
+            value = nixpkgs.lib.nixosSystem {
+              specialArgs = { inherit inputs outputs sysname; };
+              modules = [
+                {
+                  nixpkgs.overlays = [ overlays.unstable-packages ];
+                  nixpkgs.config.allowUnfree = true;
+                }
+                ./hosts/${sysname}
+              ]
+              ++ modules.nixos;
+            };
+          })
+          [
+            "hoard"
+            "bench"
+          ]
+      );
 
-      nixosConfigurations =
-        # lib.attrsets.mergeAttrsList [
-        #   (lib.x.mkRpiSystem "den")
-        # ];
-        nixpkgs.lib.listToAttrs (
-          map
-            (sysname: {
-              name = sysname;
-              value = nixpkgs.lib.nixosSystem {
-                specialArgs = {
-                  inherit
-                    inputs
-                    outputs
-                    sysname
-                    lib
-                    ;
-                };
-                modules = [
-                  ./hosts/${sysname}
-                ];
-              };
-            })
-            [
-              "play"
-              "hoard"
-              "den"
-            ]
-        );
-
+      # Darwin systems use unstable
       darwinConfigurations = {
         "grind" = nix-darwin.lib.darwinSystem {
           specialArgs = {
-            inherit
-              inputs
-              outputs
-              self
-              lib
-              ;
+            inherit inputs outputs self;
             sysname = "grind";
           };
           modules = [
+            {
+              nixpkgs.config.allowUnfree = true;
+            }
             ./hosts/grind
-          ];
+          ]
+          ++ modules.darwin;
         };
       };
 
       homeConfigurations = {
-        "bear@grind" = home-manager.lib.homeManagerConfiguration {
-          pkgs = nixpkgsFor.aarch64-darwin;
+        "bear@grind" = home-manager-unstable.lib.homeManagerConfiguration {
+          pkgs = import nixpkgs-unstable {
+            system = "aarch64-darwin";
+            config.allowUnfree = true;
+          };
           extraSpecialArgs = { inherit inputs outputs; };
           modules = [
             ./home-manager/home.nix
           ];
         };
       };
-
-      # packages = forAllSystems (system: let
-      #   pkgs = nixpkgsFor.${system};
-      # in {
-      #   nvim-packs =
-      #     pkgs.callPackage ./nvimPacks.nix {};
-      # });
     };
 }

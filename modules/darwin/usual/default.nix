@@ -1,6 +1,0 @@
-{
-  imports = [
-    ../../usual
-    ./zsh.nix
-  ];
-}

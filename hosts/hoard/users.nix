@@ -1,4 +1,5 @@
 {pkgs, ...}: {
+  programs.zsh.enable = true;
   users.defaultUserShell = pkgs.zsh;
   users.users = {
     bear = {
@@ -11,9 +12,11 @@
     };
     homepage = {
       isSystemUser = true;
+      group = "homepage";
       extraGroups = ["sensors"];
     };
   };
+  users.groups.homepage = {};
 
   security.sudo.extraRules = [
     {

@@ -2,7 +2,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   config = {
     # Disable default nix-gc
     nix.gc.automatic = lib.mkDefault false;
@@ -10,7 +11,7 @@
     # Custom GC that keeps last 3 generations
     systemd.services.nix-gc-keep3 = {
       description = "Nix Garbage Collector (keep last 3)";
-      startAt = "03:00";
+      startAt = "05:00";
       serviceConfig = {
         Type = "oneshot";
         CPUQuota = "30%";
