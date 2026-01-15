@@ -105,6 +105,7 @@
           [
             "hoard"
             "bench"
+            "rosetta"
           ]
       );
 
