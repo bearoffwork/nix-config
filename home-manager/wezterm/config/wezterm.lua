@@ -2,15 +2,47 @@ local colors = require("colors")
 local wezterm = require("wezterm")
 
 local function tab_title(tab_info)
+  local superscript = { "⁰", "¹", "²", "³", "⁴", "⁵", "⁶", "⁷", "⁸", "⁹" }
+
+  local function to_superscript(n)
+    local result = ""
+    for digit in tostring(n):gmatch("%d") do
+      result = result .. superscript[tonumber(digit) + 1]
+    end
+    return result
+  end
+
+  local tab_num = to_superscript(tab_info.tab_index + 1)
   local title = tab_info.tab_title
+
   -- if the tab title is explicitly set, take that
   if title and #title > 0 then
-    return title
+    return tab_num .. title
   end
-  -- Otherwise, use the title from the active pane
-  -- in that tab
-  return tab_info.active_pane.title
+
+  local active_pane_title = tab_info.active_pane.title
+  if active_pane_title and #active_pane_title > 0 then
+    return tab_num .. active_pane_title
+  end
+
+  local cwd_uri = tab_info.active_pane.current_working_dir
+  local cwd = cwd_uri and cwd_uri.file_path or "~"
+
+  local basename = cwd:match("([^/]+)/?$") or cwd
+
+  return tab_num .. " " .. basename
 end
+
+-- local function tab_title(tab_info)
+--   local title = tab_info.tab_title
+--   -- if the tab title is explicitly set, take that
+--   if title and #title > 0 then
+--     return title
+--   end
+--   -- Otherwise, use the title from the active pane
+--   -- in that tab
+--   return tab_info.active_pane.title
+-- end
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
   local title = tab_title(tab)

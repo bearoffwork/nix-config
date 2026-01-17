@@ -22,7 +22,7 @@
 
       includes = [
         {
-          condition = "hasconfig:remote.origin.url:https://github.com/euimoney/*";
+          condition = "hasconfig:remote.*.url:https://github.com/euimoney/**";
           contents.user.email = "bear@eui.money";
         }
       ];

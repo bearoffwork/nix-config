@@ -28,6 +28,9 @@
     # Disk management
     disko.url = "github:nix-community/disko?ref=master";
     disko.inputs.nixpkgs.follows = "nixpkgs";
+
+    nixos-generators.url = "github:nix-community/nixos-generators";
+    nixos-generators.inputs.nixpkgs.follows = "nixpkgs";
   };
 
   outputs =
@@ -44,6 +47,15 @@
       inherit (self) outputs;
 
       forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+      forAllVMs =
+        f:
+        nixpkgs.lib.genAttrs nixpkgs.lib (
+          system:
+          f {
+            inherit system;
+            pkgs = pkgsFor system;
+          }
+        );
 
       overlays = {
         unstable-packages = final: _prev: {
@@ -57,8 +69,13 @@
 
       pkgsFor = forAllSystems (
         system:
-        import nixpkgs-unstable {
+        import nixpkgs {
           inherit system;
+          config.allowUnfreePredicate =
+            pkg:
+            builtins.elem (nixpkgs.lib.getName pkg) [
+              "tart"
+            ];
         }
       );
     in
@@ -78,8 +95,7 @@
         {
           default = pkgs.mkShell {
             buildInputs = with pkgs; [
-              nixfmt
-              nil
+              tart
             ];
           };
         }
@@ -138,5 +154,29 @@
           ];
         };
       };
+
+      packages = forAllVMs (
+        { system, pkgs }:
+        {
+          vm = nixos-generators.nixosGenerate {
+            system = system;
+            specialArgs = {
+              pkgs = pkgs;
+            };
+            modules = [
+              {
+                # Pin nixpkgs to the flake input, so that the packages installed
+                # come from the flake inputs.nixpkgs.url.
+                nix.registry.nixpkgs.flake = nixpkgs;
+                # set disk size to to 20G
+                virtualisation.diskSize = 20 * 1024;
+              }
+              # Apply the rest of the config.
+              ./configuration.nix
+            ];
+            format = "raw";
+          };
+        }
+      );
     };
 }
