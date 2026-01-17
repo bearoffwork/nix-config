@@ -7,10 +7,9 @@
     "${inputs.nixpkgs}/nixos/modules/installer/cd-dvd/installation-cd-minimal.nix"
   ];
 
-  services.openssh = {
-    enable = true;
-    settings.PermitRootLogin = "no";
-  };
+  # Disable compression for faster builds
+  # isoImage.squashfsCompression = "gzip -Xcompression-level 1";
+  isoImage.compressImage = false;
 
   users.users.nixos = {
     extraGroups = [ "wheel" ];
@@ -24,5 +23,5 @@
   security.sudo.wheelNeedsPassword = false;
 
   nixpkgs.hostPlatform = "x86_64-linux";
-  system.stateVersion = "25.05";
+  system.stateVersion = "25.11";
 }
