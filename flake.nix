@@ -21,95 +21,128 @@
     disko.inputs.nixpkgs.follows = "nixpkgs";
   };
 
-  outputs =
-    {
-      self,
-      nixpkgs,
-      nixpkgs-unstable,
-      nix-darwin,
-      home-manager,
-      ...
-    }@inputs:
-    let
-      inherit (self) outputs;
+  outputs = {
+    self,
+    nixpkgs,
+    nixpkgs-unstable,
+    nix-darwin,
+    home-manager,
+    ...
+  } @ inputs: let
+    inherit (self) outputs;
 
-      forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+    forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
 
-      overlays = {
-        unstable-packages = final: _prev: {
-          unstable = import nixpkgs-unstable {
-            inherit (final) system;
-            config.allowUnfree = true;
-          };
+    overlays = {
+      unstable-pkgs = final: _prev: {
+        unstable = import nixpkgs-unstable rec {
+          inherit (final) lib system;
+          config.allowUnfreePredicate = pkg:
+            builtins.elem (lib.getName pkg) [
+              "tart"
+            ];
         };
       };
+    };
 
-      modules = import ./modules/top-level/all-modules.nix { inherit (nixpkgs) lib; };
-
-      pkgsFor =
-        nixpkgs: system:
-        import nixpkgs {
+    pkgsFor = forAllSystems (
+      system:
+        import nixpkgs-unstable {
           inherit system;
-          config.allowUnfree = true;
-        };
-    in
-    {
-      inherit overlays modules;
+          overlays = [overlays.unstable-pkgs];
+        }
+    );
 
-      devShells = forAllSystems (system: {
-        default = (pkgsFor nixpkgs-unstable system).mkShell {
-          packages = [ (pkgsFor nixpkgs-unstable system).tart ];
-        };
-      });
+    modules = import ./modules/top-level/all-modules.nix {inherit (nixpkgs) lib;};
 
-      nixosConfigurations = nixpkgs.lib.listToAttrs (
-        map
-          (sysname: {
-            name = sysname;
-            value = nixpkgs.lib.nixosSystem {
-              specialArgs = {
-                inherit inputs outputs sysname;
-              };
-              modules = [
-                {
-                  nixpkgs.overlays = [ overlays.unstable-packages ];
-                  nixpkgs.config.allowUnfree = true;
-                }
-                ./hosts/${sysname}
-              ]
-              ++ modules.nixos;
-            };
-          })
-          [
-            "hoard"
-            "bench"
-            "rosetta"
-            "installer"
-          ]
-      );
-
-      darwinConfigurations.grind = nix-darwin.lib.darwinSystem {
+    # Helper functions for system configuration
+    mkHost = {
+      name,
+      systemBuilder ? nixpkgs-unstable.lib.nixosSystem,
+      platform ? "nixos",
+    }: let
+      # Select platform modules based on explicit platform parameter
+      platformModules =
+        if platform == "darwin"
+        then modules.darwin
+        else modules.nixos;
+    in {
+      inherit name;
+      value = systemBuilder {
         specialArgs = {
           inherit inputs outputs self;
-          sysname = "grind";
         };
-        modules = [
-          { nixpkgs.config.allowUnfree = true; }
-          ./hosts/grind
-        ]
-        ++ modules.darwin;
+        modules =
+          [
+            {
+              nixpkgs.overlays = [overlays.unstable-pkgs];
+              system.name = name;
+            }
+            ./hosts/${name}
+          ]
+          ++ platformModules;
       };
-
-      homeConfigurations."bear@grind" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor nixpkgs-unstable "aarch64-darwin";
-        extraSpecialArgs = { inherit inputs outputs; };
-        modules = [ ./home-manager/home.nix ];
-      };
-
-      packages = forAllSystems (system: {
-        installer = self.nixosConfigurations.installer.config.system.build.isoImage;
-      });
-
-      formatter = forAllSystems (system: (pkgsFor nixpkgs-unstable system).nixfmt);
     };
+
+    mkHosts = configs: nixpkgs.lib.listToAttrs (map mkHost configs);
+  in {
+    inherit modules;
+
+    nixosConfigurations = mkHosts [
+      {
+        name = "hoard";
+        systemBuilder = nixpkgs.lib.nixosSystem;
+      }
+      {name = "installer";}
+      {name = "bench";}
+      {name = "rosetta";}
+    ];
+
+    darwinConfigurations = mkHosts [
+      {
+        name = "grind";
+        systemBuilder = nix-darwin.lib.darwinSystem;
+        platform = "darwin";
+      }
+    ];
+
+    homeConfigurations."bear@grind" = home-manager.lib.homeManagerConfiguration {
+      pkgs = pkgsFor.aarch64-darwin;
+      extraSpecialArgs = {inherit inputs outputs;};
+      modules = [./home-manager/home.nix];
+    };
+
+    packages = forAllSystems (
+      system:
+      # let
+      #   # Only build installer for Linux systems
+      #   linuxSystems = [
+      #     "x86_64-linux"
+      #     "aarch64-linux"
+      #   ];
+      #   isLinux = builtins.elem system linuxSystems;
+      # in
+      {
+        installer = self.nixosConfigurations.installer.config.system.build.isoImage;
+      }
+      # nixpkgs.lib.optionalAttrs isLinux {
+      #   installer = self.nixosConfigurations.installer.config.system.build.isoImage;
+      # }
+    );
+
+    devShells = forAllSystems (
+      system: let
+        pkgs = pkgsFor.${system};
+      in {
+        default = pkgs.mkShell {
+          packages = with pkgs; [
+            # tart
+            nixos-rebuild
+          ];
+        };
+      }
+    );
+
+    formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
+  };
 }

@@ -7,7 +7,8 @@
   lib,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ./hardware-configuration.nix
     inputs.nixos-hardware.nixosModules.common-cpu-amd
@@ -28,7 +29,7 @@
     "nct6775" # asrock b550m pg riptide sensors
     "ixgbe"
   ];
-  boot.kernelParams = ["ixgbe.allow_unsupported_sfp=1"];
+  boot.kernelParams = [ "ixgbe.allow_unsupported_sfp=1" ];
   boot.extraModprobeConfig = ''
     options ixgbe allow_unsupported_sfp=1
   '';
@@ -44,7 +45,8 @@
   time.timeZone = "Asia/Taipei";
   i18n.defaultLocale = "en_US.UTF-8";
 
-  nixpkgs.config.allowUnfreePredicate = pkg:
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
     builtins.elem (lib.getName pkg) [
       "lsiutil"
       "storcli"
@@ -77,7 +79,11 @@
   # Enable the OpenSSH daemon.
   services.openssh.enable = true;
 
-  networking.firewall.allowedTCPPorts = [22 80 443];
+  networking.firewall.allowedTCPPorts = [
+    22
+    80
+    443
+  ];
   # networking.firewall.allowedUDPPorts = [ ... ];
 
   system.stateVersion = "25.05";

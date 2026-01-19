@@ -66,13 +66,19 @@
           pu = "push";
           pl = "pull";
           aa = "add -A";
+
           cm = "commit -m";
+          ca = "commit --amend";
           cam = "commit -am";
           caa = "commit -a --amend";
           caam = "commit -a --amend -m";
+
           mr = "merge --no-ed";
           mrc = "merge --continue";
+
           rs = "reset";
+          rsh = "reset --hard";
+
           cp = "cherry-pick";
         };
       };

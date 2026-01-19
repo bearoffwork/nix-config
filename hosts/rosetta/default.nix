@@ -10,6 +10,18 @@
     ./users.nix
   ];
 
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
+  boot.loader.efi.efiSysMountPoint = "/boot/efi";
+
+  networking.networkmanager.enable = true;
+
+  i18n.defaultLocale = "en_US.UTF-8";
+  i18n.extraLocaleSettings = {
+    LC_ALL = "en_US.UTF-8";
+  };
+
   # nixpkgs.config.allowUnfreePredicate =
   #   pkg:
   #   lib.hasPrefix "cudatoolkit" (lib.getName pkg)

@@ -39,7 +39,8 @@
       lua-language-server
       stylua
       nixd
-      nixfmt-rfc-style
+      nixfmt
+      alejandra
       bash-language-server
       shfmt
       docker-language-server # from docker team
@@ -59,6 +60,6 @@
   };
 
   xdg.dataFile."nvim-packs" = {
-    source = pkgs.callPackage ./nvim-packs.nix {};
+    source = pkgs.callPackage ./nvim-packs.nix { };
   };
 }

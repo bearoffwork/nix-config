@@ -1,4 +1,5 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   environment.variables = {
     SHELL = "${pkgs.zsh}/bin/zsh";
     LANG = "en_US.UTF-8";

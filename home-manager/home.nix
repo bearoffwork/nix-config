@@ -2,9 +2,11 @@
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
   config,
+  lib,
   pkgs,
   ...
-}: {
+}:
+{
   imports = [
     ./cli/aws.nix
     ./cli/direnv.nix
@@ -16,12 +18,17 @@
     ./wezterm
   ];
 
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "claude-code"
+      "google-chrome"
+    ];
+
   home = {
     username = "bear";
     homeDirectory =
-      if pkgs.stdenv.isDarwin
-      then "/Users/${config.home.username}"
-      else "/home/${config.home.username}";
+      if pkgs.stdenv.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}";
   };
 
   xdg.configFile."home-manager" = {
@@ -39,6 +46,7 @@
     rsync
     curl
     wget
+    watchexec
 
     docker-client
     amazon-ecr-credential-helper
@@ -57,7 +65,7 @@
     viddy
     duckdb
     claude-code
-    github-copilot-cli
+    opencode
   ];
 
   home.sessionPath = [

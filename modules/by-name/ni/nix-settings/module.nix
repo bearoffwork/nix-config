@@ -1,21 +1,72 @@
+# SPDX-License-Identifier: MIT
+
+# Based on https://github.com/gytis-ivaskevicius/flake-utils-plus/blob/baf73049d14736b3bd3d3d8ccb0daac209fbf291/lib/options.nix
+
 {
-  inputs,
-  config,
   lib,
+  config,
+  inputs,
   ...
 }:
+
 let
-  flakeInputs = lib.filterAttrs (_: lib.isType "flake") inputs;
+  inherit (lib)
+    mapAttrs
+    mapAttrs'
+    nameValuePair
+    types
+    ;
+
+  hasDarwinConfig = config.environment ? darwinConfig;
+  inherit (config.environment) darwinConfig;
+
+  linkedInputs =
+    mapAttrs' (name: value: nameValuePair "nix/inputs/${name}" { source = value; }) inputs
+    // lib.optionalAttrs hasDarwinConfig { "nix/inputs/darwin-config".source = darwinConfig; };
+
+  flakeRegistry = mapAttrs (_: value: { flake = value; }) inputs;
+
+  cfg = config.nix;
 in
 {
-  nix = {
-    settings = {
-      experimental-features = lib.mkDefault "nix-command flakes";
-      # flake-registry = lib.mkDefault "";
-      nix-path = lib.mkDefault config.nix.nixPath;
+  options.nix = {
+    generateRegistryFromInputs = lib.mkEnableOption "Generate `nix.registry` from inputs.";
+
+    generateNixPathFromInputs = lib.mkEnableOption "Generate `nix.nixPath` from inputs.";
+
+    linkInputs = lib.mkOption {
+      type = types.bool;
+      description = "Link inputs to `/etc/nix/inputs`.";
+      default = cfg.generateNixPathFromInputs;
     };
-    channel.enable = lib.mkDefault false;
-    registry = lib.mkDefault (lib.mapAttrs (_: flake: { inherit flake; }) flakeInputs);
-    nixPath = lib.mkDefault (lib.mapAttrsToList (n: _: "${n}=flake:${n}") flakeInputs);
+  };
+
+  config = {
+    assertions = [
+      {
+        assertion = cfg.generateNixPathFromInputs -> cfg.linkInputs;
+        message = "Enabling `nix.generateNixPathFromInput` requires `nix.linkInputs` be enabled.";
+      }
+    ];
+
+    nix.settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      use-xdg-base-directories = true;
+
+      # disable global registry
+      flake-registry = "";
+
+      # Workaround for https://github.com/NixOS/nix/issues/9574
+      # for legacy command and syntax like "<nixpkgs>" and nix-shell, nix-build, etc.
+      nix-path = config.nix.nixPath;
+    };
+
+    environment.etc = lib.mkIf cfg.linkInputs linkedInputs;
+
+    nix.nixPath = lib.mkIf cfg.generateNixPathFromInputs (lib.mkForce [ "/etc/nix/inputs" ]);
+    nix.registry = lib.mkIf cfg.generateRegistryFromInputs flakeRegistry;
   };
 }

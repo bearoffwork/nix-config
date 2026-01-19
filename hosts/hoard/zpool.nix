@@ -1,11 +1,12 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_12;
   boot.zfs.package = pkgs.zfs_2_3;
 
-  boot.supportedFilesystems = ["zfs"];
+  boot.supportedFilesystems = [ "zfs" ];
   boot.zfs = {
     forceImportRoot = false;
-    extraPools = ["pool-0"];
+    extraPools = [ "pool-0" ];
     devNodes = "/dev/disk/by-id";
   };
 

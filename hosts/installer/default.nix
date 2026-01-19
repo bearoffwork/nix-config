@@ -1,5 +1,6 @@
 {
   inputs,
+  lib,
   ...
 }:
 {
@@ -22,6 +23,7 @@
 
   security.sudo.wheelNeedsPassword = false;
 
-  nixpkgs.hostPlatform = "x86_64-linux";
+  # Don't hardcode - allow override via --system
+  nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   system.stateVersion = "25.11";
 }

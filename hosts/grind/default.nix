@@ -2,6 +2,7 @@
   outputs,
   self,
   pkgs,
+  lib,
   ...
 }:
 {
@@ -17,7 +18,7 @@
       trusted-users = [ "bear" ];
       max-jobs = "auto";
       cores = 0;
-      sandbox = true;
+      sandbox = false;
     };
     linux-builder = {
       enable = true;
@@ -60,6 +61,12 @@
 
   environment.shells = [
     pkgs.zsh
+  ];
+
+  environment.profiles = lib.mkForce [
+    "$HOME/.local/state/nix/profile"
+    "/run/current-system/sw"
+    "/nix/var/nix/profiles/default"
   ];
 
   environment.variables = {

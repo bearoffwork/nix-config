@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   system.defaults.NSGlobalDomain.AppleKeyboardUIMode = 3;
   system.defaults.NSGlobalDomain.ApplePressAndHoldEnabled = false;
   system.defaults.NSGlobalDomain.InitialKeyRepeat = 15;
@@ -26,8 +27,8 @@
     show-recents = false;
     showhidden = true;
     # clear dock items
-    persistent-apps = [];
-    persistent-others = [];
+    persistent-apps = [ ];
+    persistent-others = [ ];
   };
 
   system.defaults.finder.AppleShowAllExtensions = true;
@@ -38,32 +39,59 @@
     "com.apple.symbolichotkeys" = {
       AppleSymbolicHotKeys = {
         # # dock hiding toggle
-        "52" = {enabled = false;};
+        "52" = {
+          enabled = false;
+        };
         # Mission Control
-        "32" = {enabled = false;};
-        "33" = {enabled = false;};
-        "34" = {enabled = false;};
-        "35" = {enabled = false;};
-        "79" = {enabled = false;};
-        "80" = {enabled = false;};
-        "81" = {enabled = false;};
-        "82" = {enabled = false;};
-        "118" = {enabled = false;};
-        "119" = {enabled = false;};
-        "120" = {enabled = false;};
-        "121" = {enabled = false;};
+        "32" = {
+          enabled = false;
+        };
+        "33" = {
+          enabled = false;
+        };
+        "34" = {
+          enabled = false;
+        };
+        "35" = {
+          enabled = false;
+        };
+        "79" = {
+          enabled = false;
+        };
+        "80" = {
+          enabled = false;
+        };
+        "81" = {
+          enabled = false;
+        };
+        "82" = {
+          enabled = false;
+        };
+        "118" = {
+          enabled = false;
+        };
+        "119" = {
+          enabled = false;
+        };
+        "120" = {
+          enabled = false;
+        };
+        "121" = {
+          enabled = false;
+        };
         # "" = {enabled = false;};
       };
     };
     # prevent cmd+shift+a collision with JetBrains IDE shortcut
-    "pbs"."NSServicesStatus"."com.apple.Terminal - Search man Page Index in Terminal - searchManPages" = {
-      "enabled_context_menu" = 0;
-      "enabled_services_menu" = 0;
-      "presentation_modes" = {
-        ContextMenu = 0;
-        ServicesMenu = 0;
+    "pbs"."NSServicesStatus"."com.apple.Terminal - Search man Page Index in Terminal - searchManPages" =
+      {
+        "enabled_context_menu" = 0;
+        "enabled_services_menu" = 0;
+        "presentation_modes" = {
+          ContextMenu = 0;
+          ServicesMenu = 0;
+        };
       };
-    };
   };
 
   # system.defaults.trackpad.Clicking = true;
