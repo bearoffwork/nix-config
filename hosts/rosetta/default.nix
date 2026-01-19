@@ -1,13 +1,11 @@
-{
-  inputs,
-  ...
-}:
+{ inputs, ... }:
 {
   imports = [
     inputs.nixos-hardware.nixosModules.framework-amd-ai-300-series
     inputs.disko.nixosModules.disko
     ./disko.nix
     ./users.nix
+    ./desktop
   ];
 
   # Use the systemd-boot EFI boot loader.
