@@ -59,6 +59,7 @@ return {
 
   font = wezterm.font({
     family = "ComicCode Nerd Font",
+    -- family = "CaskaydiaCove Nerd Font",
   }),
   font_size = 13,
 

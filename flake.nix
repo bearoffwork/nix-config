@@ -124,6 +124,12 @@
         modules = [ ./home-manager/home.nix ];
       };
 
+      homeConfigurations."bear@rosetta" = home-manager.lib.homeManagerConfiguration {
+        pkgs = pkgsFor.x86_64-linux;
+        extraSpecialArgs = { inherit inputs outputs; };
+        modules = [ ./home-manager/rosetta.nix ];
+      };
+
       packages = forAllSystems (system: {
         installer =
           (mkHost {
