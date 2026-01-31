@@ -26,6 +26,9 @@ vim.o.cursorline = true
 vim.o.scrolloff = 10
 vim.o.confirm = true
 
+vim.o.title = true
+vim.o.titlestring = " %t"
+
 -- vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
 
 vim.api.nvim_create_autocmd("TextYankPost", {

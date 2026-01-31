@@ -9,8 +9,8 @@ return {
                 formatters_by_ft = {
                     lua = { "stylua" },
 
-                    -- nix = { "nixfmt" },
-                    nix = { "alejandra" },
+                    nix = { "nixfmt" },
+                    -- nix = { "alejandra" },
 
                     sh = { "shfmt" },
                     json = { "jq" },

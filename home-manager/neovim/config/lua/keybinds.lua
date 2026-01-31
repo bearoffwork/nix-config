@@ -4,6 +4,12 @@ vim.keymap.set("n", "<leader>yp", function()
     print("Yanked path: " .. filename)
 end, { desc = "Yank buffer path" })
 
+vim.keymap.set("n", "<leader>yP", function()
+    local filename = vim.fn.expand("%:p")
+    vim.fn.setreg("+", filename)
+    print("Yanked realpath: " .. filename)
+end, { desc = "Yank buffer realpath" })
+
 vim.keymap.set("n", "<leader>yb", function()
     local filename = vim.fn.expand("%")
     local lines = vim.api.nvim_buf_get_lines(0, 0, -1, false)
