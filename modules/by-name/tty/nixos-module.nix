@@ -30,4 +30,7 @@
       "cad3f5" # bright white (text)
     ];
   };
+
+  # Show IP addresses on login TTY
+  services.getty.helpLine = lib.mkDefault "\n${pkgs.iproute2}/bin/ip -brief addr | ${pkgs.ripgrep}/bin/rg -v lo | ${pkgs.util-linux}/bin/column -t\n";
 }

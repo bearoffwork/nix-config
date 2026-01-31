@@ -1,5 +1,8 @@
 { pkgs, ... }:
 {
+  home.packages = with pkgs; [
+    ssm-session-manager-plugin
+  ];
   programs.awscli = {
     enable = true;
     package = pkgs.awscli2;
@@ -42,6 +45,20 @@
       };
       "profile jp" = {
         region = "ap-northeast-1";
+        output = "json";
+      };
+      "profile tpe-ape2" = {
+        region = "ap-east-2";
+        output = "json";
+      };
+      "profile tpe-ape2-ro" = {
+        role_arn = "arn:aws:iam::073419086835:role/global-ro";
+        source_profile = "tpe-ape2";
+        region = "ap-east-2";
+        output = "json";
+      };
+      "profile tpe-ape2-test" = {
+        region = "ap-east-2";
         output = "json";
       };
     };

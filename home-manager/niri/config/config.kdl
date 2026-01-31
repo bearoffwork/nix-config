@@ -1,0 +1,288 @@
+// Niri config optimized for NixOS in VMware Fusion
+// This config is in the KDL format: https://kdl.dev
+// Full documentation: https://yalter.github.io/niri/Configuration:-Introduction
+
+// Input device configuration
+input {
+    keyboard {
+        xkb {
+            // Layout configuration - adjust as needed
+            // layout "us"
+            // For multiple layouts: layout "us,ru"
+            // options "grp:win_space_toggle,compose:ralt,ctrl:nocaps"
+        }
+        
+        // Enable numlock on startup
+        numlock
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+        // Disable touchpad when external mouse is connected (useful for laptop VMs)
+        disabled-on-external-mouse
+    }
+
+    mouse {
+        // No natural scroll for mouse (typical preference)
+        // accel-speed 0.0
+        // accel-profile "flat"
+    }
+
+    // Uncomment to make mouse warp to center of newly focused windows
+    // warp-mouse-to-focus
+    
+    // Focus windows when moving mouse into them (recommended for VM use)
+    focus-follows-mouse max-scroll-amount="0%"
+}
+
+// Output configuration
+// Run `niri msg outputs` to see available outputs and modes
+// For VMware, the output is typically "Virtual-1" or similar
+output "Virtual-1" {
+    // Lower resolution for better VM performance
+    // 2560x1440 is a good balance between readability and performance
+    mode "2560x1440@60"
+    
+    position x=0 y=0
+}
+
+// Layout settings
+layout {
+    // Comfortable gaps for VM usage
+    gaps 12
+    
+    // Center focused column behavior
+    // "never" - keeps columns at edges
+    // "always" - always centers the focused column
+    // "on-overflow" - centers only when it doesn't fit
+    center-focused-column "on-overflow"
+    
+    // Preset column widths (toggled with Mod+R)
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+    
+    // Default width for new windows
+    default-column-width { proportion 0.5; }
+    
+    // Focus ring configuration
+    focus-ring {
+        width 3
+        
+        // Modern blue color for active focus
+        active-color "#7fc8ff"
+        inactive-color "#505050"
+        
+        // Alternative: gradient for a more modern look
+        // active-gradient from="#80c8ff" to="#5fa8ff" angle=135
+    }
+    
+    // Border (disabled by default, enable if you prefer always-visible borders)
+    border {
+        off
+        width 2
+        active-color "#7fc8ff"
+        inactive-color "#404040"
+    }
+    
+    // Shadows disabled for better VM performance
+    shadow {
+        off
+    }
+}
+
+// Startup applications
+spawn-at-startup "waybar"
+
+// Additional useful startup apps for VM environment
+// Uncomment as needed:
+// spawn-at-startup "dunst"  // Notification daemon
+// spawn-at-startup "nm-applet"  // Network manager applet
+// spawn-at-startup "blueman-applet"  // Bluetooth applet
+
+// Hotkey overlay configuration
+hotkey-overlay {
+    // Skip the hotkey overlay at startup once you're familiar
+    // skip-at-startup
+}
+
+// Ask clients to use server-side decorations
+// This gives a more consistent look and fixes some rendering issues
+prefer-no-csd
+
+// Screenshot configuration
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+// Animation settings
+animations {
+    // Disable animations for better VM performance
+    off
+}
+
+// Window rules
+window-rule {
+    // WezTerm compatibility
+    match app-id=r#"^org\.wezfurlong\.wezterm$"#
+    default-column-width {}
+}
+
+window-rule {
+    // Firefox picture-in-picture as floating
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+// Enable rounded corners for all windows (modern look)
+window-rule {
+    geometry-corner-radius 8
+    clip-to-geometry true
+}
+
+// Keybindings
+binds {
+    // Help overlay
+    Mod+Shift+Slash { show-hotkey-overlay; }
+    
+    // Application launchers
+    Mod+Return { spawn "wezterm"; }
+    Mod+T { spawn "wezterm"; }
+    Mod+D { spawn "fuzzel"; }
+    Mod+B { spawn "chromium" "--enable-features=UseOzonePlatform" "--ozone-platform=wayland"; }
+    
+    // System controls
+    Super+L { spawn "swaylock"; }
+    Mod+Q { close-window; }
+    Mod+Shift+E { quit; }
+    Ctrl+Alt+Delete { quit; }
+    
+    // Volume controls (using wpctl)
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+ -l 1.0"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-"; }
+    XF86AudioMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"; }
+    XF86AudioMicMute allow-when-locked=true { spawn-sh "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"; }
+    
+    // Media controls
+    XF86AudioPlay allow-when-locked=true { spawn-sh "playerctl play-pause"; }
+    XF86AudioStop allow-when-locked=true { spawn-sh "playerctl stop"; }
+    XF86AudioPrev allow-when-locked=true { spawn-sh "playerctl previous"; }
+    XF86AudioNext allow-when-locked=true { spawn-sh "playerctl next"; }
+    
+    // Overview mode
+    Mod+O { toggle-overview; }
+    
+    // Window navigation (vim-style + arrows)
+    Mod+H { focus-column-left; }
+    Mod+J { focus-window-down; }
+    Mod+K { focus-window-up; }
+    Mod+L { focus-column-right; }
+    Mod+Left { focus-column-left; }
+    Mod+Down { focus-window-down; }
+    Mod+Up { focus-window-up; }
+    Mod+Right { focus-column-right; }
+    
+    // Window movement
+    Mod+Shift+H { move-column-left; }
+    Mod+Shift+J { move-window-down; }
+    Mod+Shift+K { move-window-up; }
+    Mod+Shift+L { move-column-right; }
+    Mod+Shift+Left { move-column-left; }
+    Mod+Shift+Down { move-window-down; }
+    Mod+Shift+Up { move-window-up; }
+    Mod+Shift+Right { move-column-right; }
+    
+    // Jump to first/last column
+    Mod+Home { focus-column-first; }
+    Mod+End { focus-column-last; }
+    Mod+Shift+Home { move-column-to-first; }
+    Mod+Shift+End { move-column-to-last; }
+    
+    // Monitor focus (useful if you add multiple displays to VM)
+    Mod+Ctrl+H { focus-monitor-left; }
+    Mod+Ctrl+J { focus-monitor-down; }
+    Mod+Ctrl+K { focus-monitor-up; }
+    Mod+Ctrl+L { focus-monitor-right; }
+    Mod+Ctrl+Left { focus-monitor-left; }
+    Mod+Ctrl+Down { focus-monitor-down; }
+    Mod+Ctrl+Up { focus-monitor-up; }
+    Mod+Ctrl+Right { focus-monitor-right; }
+    
+    // Workspace navigation
+    Mod+U { focus-workspace-down; }
+    Mod+I { focus-workspace-up; }
+    Mod+Page_Down { focus-workspace-down; }
+    Mod+Page_Up { focus-workspace-up; }
+    
+    // Move window to workspace
+    Mod+Ctrl+U { move-column-to-workspace-down; }
+    Mod+Ctrl+I { move-column-to-workspace-up; }
+    Mod+Ctrl+Page_Down { move-column-to-workspace-down; }
+    Mod+Ctrl+Page_Up { move-column-to-workspace-up; }
+    
+    // Move workspace itself
+    Mod+Shift+U { move-workspace-down; }
+    Mod+Shift+I { move-workspace-up; }
+    Mod+Shift+Page_Down { move-workspace-down; }
+    Mod+Shift+Page_Up { move-workspace-up; }
+    
+    // Workspace switching by number
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    
+    // Mouse wheel workspace switching
+    Mod+WheelScrollDown cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp cooldown-ms=150 { move-column-to-workspace-up; }
+    
+    // Column management
+    Mod+BracketLeft { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+Comma { consume-window-into-column; }
+    Mod+Period { expel-window-from-column; }
+    
+    // Window sizing
+    Mod+R { switch-preset-column-width; }
+    Mod+Shift+R { switch-preset-window-height; }
+    Mod+Ctrl+R { reset-window-height; }
+    Mod+F { maximize-column; }
+    Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+F { expand-column-to-available-width; }
+    
+    // Fine-grained size adjustment
+    Mod+Minus { set-column-width "-10%"; }
+    Mod+Equal { set-column-width "+10%"; }
+    Mod+Shift+Minus { set-window-height "-10%"; }
+    Mod+Shift+Equal { set-window-height "+10%"; }
+    
+    // Centering
+    Mod+C { center-column; }
+    Mod+Ctrl+C { center-visible-columns; }
+    
+    // Floating window toggle
+    Mod+V { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+    
+    // Tabbed column display
+    Mod+W { toggle-column-tabbed-display; }
+    
+    // Screenshots
+    Print { screenshot; }
+    Ctrl+Print { screenshot-screen; }
+    Alt+Print { screenshot-window; }
+    
+    // Keyboard shortcuts inhibitor toggle (for VNC/RDP clients)
+    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+    
+    // Power off monitors
+    Mod+Shift+P { power-off-monitors; }
+}
