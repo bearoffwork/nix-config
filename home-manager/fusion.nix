@@ -19,7 +19,7 @@
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (lib.getName pkg) [
-      "google-chrome"
+      # "google-chrome"
     ];
 
   home = {
@@ -66,9 +66,8 @@
   programs.bash.enable = true;
   programs.zsh.enable = true;
 
-  programs.google-chrome = {
+  programs.chromium = {
     enable = true;
-    package = pkgs.google-chrome;
   };
 
   systemd.user.startServices = "sd-switch";
