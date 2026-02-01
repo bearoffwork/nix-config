@@ -1,5 +1,6 @@
 {
   inputs,
+  lib,
   pkgs,
   ...
 }:
@@ -47,7 +48,7 @@
   console.font = "ter-u14n";
 
   services.xserver.enable = true;
-  systemd.defaultUnit = "multi-user.target";
+  systemd.defaultUnit = lib.mkForce "multi-user.target";
   programs.niri = {
     enable = true;
   };
