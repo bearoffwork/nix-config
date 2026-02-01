@@ -37,7 +37,10 @@
     LC_ALL = "en_US.UTF-8";
   };
 
-  services.fwupd.enable = true;
+  services.xserver.enable = true;
+  programs.hyprland = {
+    enable = true;
+  };
 
   system.stateVersion = "25.11";
 }
