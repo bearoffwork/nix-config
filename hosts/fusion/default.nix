@@ -9,7 +9,6 @@
     inputs.disko.nixosModules.disko
     ./disko.nix
     ./users.nix
-    ./desktop
   ];
 
   # Use the systemd-boot EFI boot loader.
@@ -44,6 +43,9 @@
   };
 
   programs.zsh.enable = true;
+
+  virtualisation.vmware.guest.enable = true;
+
   users.defaultUserShell = pkgs.zsh;
 
   system.stateVersion = "25.11";
