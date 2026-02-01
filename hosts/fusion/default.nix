@@ -17,10 +17,18 @@
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.networkmanager.enable = true;
   networking.firewall.enable = false;
+  networking.networkmanager = {
+    enable = true;
+    dns = "none";
+    insertNameservers = [
+      "1.1.1.1"
+      "8.8.8.8"
+    ];
+  };
   networking.nameservers = [
     "1.1.1.1"
+    "8.8.8.8"
   ];
 
   environment.systemPackages = with pkgs; [
