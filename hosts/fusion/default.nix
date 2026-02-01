@@ -20,6 +20,9 @@
 
   networking.networkmanager.enable = true;
   networking.firewall.enable = false;
+  networking.nameservers = [
+    "1.1.1.1"
+  ];
 
   environment.systemPackages = with pkgs; [
     # Copied from https://github.com/mitchellh/nixos-config/blob/main/machines/vm-shared.nix

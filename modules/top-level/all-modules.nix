@@ -5,16 +5,10 @@ let
 
   inherit (lib)
     attrNames
-    concatMap
-    elemAt
     filter
     filterAttrs
     pathExists
-    substring
-    toLower
-    foldl'
     ;
-  inherit (lib.trivial) pipe;
 
   enumerateModules =
     {
@@ -22,26 +16,10 @@ let
       basePath,
     }:
     let
-      childPaths = path: attrNames (filterAttrs (_: type: type == "directory") (readDir path));
-
-      isShardedCorrectly = path: elemAt path 0 == toLower (substring 0 2 (elemAt path 1));
-
-      mkPath = shard: package: [
-        shard
-        package
-        "${prefix}module.nix"
-      ];
-
-      modulesInShard = shard: map (mkPath shard) (childPaths (basePath + "/${shard}"));
-
-      renderPath = foldl' (path: elem: path + "/${elem}");
+      moduleDirs = attrNames (filterAttrs (_: type: type == "directory") (readDir basePath));
+      mkModulePath = name: basePath + "/${name}/${prefix}module.nix";
     in
-    pipe (childPaths basePath) [
-      (concatMap modulesInShard)
-      (filter isShardedCorrectly)
-      (map (renderPath basePath))
-      (filter pathExists)
-    ];
+    filter pathExists (map mkModulePath moduleDirs);
 
   allModules = enumerateModules { basePath = ../by-name; };
 in
