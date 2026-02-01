@@ -47,8 +47,7 @@
 
   console.font = "ter-u14n";
 
-  services.xserver.enable = true;
-  systemd.defaultUnit = lib.mkForce "multi-user.target";
+  # services.xserver.enable = true;
   programs.niri = {
     enable = true;
   };
