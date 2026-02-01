@@ -47,7 +47,7 @@
   console.font = "ter-u14n";
 
   services.xserver.enable = true;
-  systemd.defaultTarget = "multi-user.target";
+  systemd.target = "multi-user.target";
   programs.niri = {
     enable = true;
   };
