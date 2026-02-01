@@ -44,7 +44,10 @@
     LC_ALL = "en_US.UTF-8";
   };
 
+  console.font = "ter-u14n";
+
   services.xserver.enable = true;
+  systemd.defaultTarget = "multi-user.target";
   programs.niri = {
     enable = true;
   };
