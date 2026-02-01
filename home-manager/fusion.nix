@@ -14,6 +14,7 @@
     ./cli/zsh
     ./neovim
     ./wezterm
+    ./niri
   ];
 
   nixpkgs.config.allowUnfreePredicate =

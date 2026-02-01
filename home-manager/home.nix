@@ -15,6 +15,7 @@
     ./cli/zsh
     ./darwin
     ./neovim
+    ./niri
     ./wezterm
   ];
 
@@ -74,6 +75,16 @@
 
   home.shellAliases = {
     j = "just";
+  };
+
+  # Wayland environment variables for Chromium/Electron apps
+  home.sessionVariables = {
+    NIXOS_OZONE_WL = "1";
+    # Additional Wayland variables for better compatibility
+    MOZ_ENABLE_WAYLAND = "1";
+    QT_QPA_PLATFORM = "wayland";
+    SDL_VIDEODRIVER = "wayland";
+    _JAVA_AWT_WM_NONREPARENTING = "1";
   };
 
   programs.home-manager.enable = true;
