@@ -22,8 +22,6 @@
   networking.firewall.enable = false;
 
   environment.systemPackages = with pkgs; [
-    zsh
-
     # Copied from https://github.com/mitchellh/nixos-config/blob/main/machines/vm-shared.nix
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
@@ -41,6 +39,9 @@
   programs.hyprland = {
     enable = true;
   };
+
+  programs.zsh.enable = true;
+  users.defaultUserShell = pkgs.zsh;
 
   system.stateVersion = "25.11";
 }
