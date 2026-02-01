@@ -17,18 +17,17 @@
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
-  networking.firewall.enable = false;
   networking.networkmanager = {
     enable = true;
     dns = "none";
     insertNameservers = [
       "1.1.1.1"
-      "8.8.8.8"
+      "168.95.1.1"
     ];
   };
   networking.nameservers = [
     "1.1.1.1"
-    "8.8.8.8"
+    "168.95.1.1"
   ];
 
   environment.systemPackages = with pkgs; [
@@ -46,7 +45,7 @@
   };
 
   services.xserver.enable = true;
-  programs.hyprland = {
+  programs.niri = {
     enable = true;
   };
 
