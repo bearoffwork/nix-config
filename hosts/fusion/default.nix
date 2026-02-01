@@ -32,6 +32,7 @@
   ];
 
   environment.systemPackages = with pkgs; [
+    xrandr
     # Copied from https://github.com/mitchellh/nixos-config/blob/main/machines/vm-shared.nix
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
@@ -47,7 +48,6 @@
 
   console.font = "ter-u14n";
 
-  # services.xserver.enable = true;
   programs.niri = {
     enable = true;
   };
