@@ -12,8 +12,11 @@
     ./users.nix
   ];
 
+  nixpkgs.config.allowUnfree = true;
+
   # Use the systemd-boot EFI boot loader.
   boot.loader.systemd-boot.enable = true;
+  boot.loader.timeout = 1;
   boot.loader.efi.canTouchEfiVariables = true;
   boot.loader.efi.efiSysMountPoint = "/boot/efi";
   boot.kernelPackages = pkgs.linuxPackages_latest;
@@ -34,6 +37,7 @@
   environment.systemPackages = with pkgs; [
     xrandr
     wl-clipboard
+    mesa-demos
     # Copied from https://github.com/mitchellh/nixos-config/blob/main/machines/vm-shared.nix
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
@@ -49,13 +53,24 @@
 
   console.font = "ter-u14n";
 
-  programs.niri = {
-    enable = true;
-  };
+  virtualisation.vmware.guest.enable = true;
+  hardware.graphics.enable = true;
 
   programs.zsh.enable = true;
 
-  virtualisation.vmware.guest.enable = true;
+  programs.xwayland.enable = true;
+  programs.hyprland.enable = true;
+  programs.dconf.profiles.user.databases = [
+    {
+      settings."org/gnome/desktop/interface" = {
+        gtk-theme = "Adwaita";
+        icon-theme = "Flat-Remix-Red-Dark";
+        font-name = "Noto Sans Medium 11";
+        document-font-name = "Noto Sans Medium 11";
+        monospace-font-name = "Noto Sans Mono Medium 11";
+      };
+    }
+  ];
 
   users.defaultUserShell = pkgs.zsh;
 
