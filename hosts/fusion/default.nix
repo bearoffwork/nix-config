@@ -38,6 +38,8 @@
     xrandr
     wl-clipboard
     mesa-demos
+    adwaita-icon-theme
+    flat-remix-icon-theme
     # Copied from https://github.com/mitchellh/nixos-config/blob/main/machines/vm-shared.nix
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
@@ -51,14 +53,13 @@
     LC_ALL = "en_US.UTF-8";
   };
 
-  console.font = "ter-u14n";
+  console.font = "ter-u32n";
 
-  virtualisation.vmware.guest.enable = true;
+  # virtualisation.vmware.guest.enable = true;
   hardware.graphics.enable = true;
 
   programs.zsh.enable = true;
 
-  programs.xwayland.enable = true;
   programs.hyprland.enable = true;
   programs.dconf.profiles.user.databases = [
     {
@@ -71,6 +72,17 @@
       };
     }
   ];
+
+  programs.uwsm = {
+    enable = true;
+    waylandCompositors = {
+      hyprland = {
+        prettyName = "Hyprland";
+        comment = "Hyprland managed by UWSM";
+        binPath = "/run/current-system/sw/bin/Hyprland"; # Path to Hyprland binary
+      };
+    };
+  };
 
   users.defaultUserShell = pkgs.zsh;
 
