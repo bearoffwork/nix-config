@@ -3,6 +3,9 @@
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-25.11";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
 
+    nix-packages.url = "github:bearoffwork/nix-packages";
+    nix-packages.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
     nixos-hardware.url = "github:NixOS/nixos-hardware?ref=master";
 
     nix-darwin.url = "github:nix-darwin/nix-darwin?ref=master";
@@ -26,6 +29,7 @@
       self,
       nixpkgs,
       nixpkgs-unstable,
+      nix-packages,
       nix-darwin,
       home-manager,
       ...
@@ -36,6 +40,9 @@
       forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
 
       overlays = {
+        mypkgs = final: _prev: {
+          p = import nix-packages { inherit (final) lib system; };
+        };
         unstable-pkgs = final: _prev: {
           unstable = import nixpkgs-unstable rec {
             inherit (final) lib system;
@@ -52,7 +59,10 @@
         system:
         import nixpkgs-unstable {
           inherit system;
-          overlays = [ overlays.unstable-pkgs ];
+          overlays = with overlays; [
+            mypkgs
+            unstable-pkgs
+          ];
         }
       );
 
@@ -68,7 +78,10 @@
           specialArgs = { inherit inputs outputs self; };
           modules = [
             {
-              nixpkgs.overlays = [ overlays.unstable-pkgs ];
+              nixpkgs.overlays = with overlays; [
+                mypkgs
+                unstable-pkgs
+              ];
               system.name = name;
             }
             ./hosts/${name}
