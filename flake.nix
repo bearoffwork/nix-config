@@ -128,6 +128,12 @@
         modules = [ ./home-manager/home.nix ];
       };
 
+      homeConfigurations."bear@hoard" = home-manager.lib.homeManagerConfiguration {
+        pkgs = pkgsFor.aarch64-linux;
+        extraSpecialArgs = { inherit inputs outputs; };
+        modules = [ ./home-manager/fusion.nix ];
+      };
+
       homeConfigurations."bear@fusion" = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgsFor.aarch64-linux;
         extraSpecialArgs = { inherit inputs outputs; };
