@@ -137,7 +137,10 @@
       homeConfigurations."bear@fusion" = home-manager.lib.homeManagerConfiguration {
         pkgs = pkgsFor.aarch64-linux;
         extraSpecialArgs = { inherit inputs outputs; };
-        modules = [ ./home-manager/fusion.nix ];
+        modules = [
+          ./home-manager/fusion.nix
+          { nixpkgs.hostPlatform = pkgs.lib.mkForce "x86_64-linux"; }
+        ];
       };
 
       # packages = forAllSystems (system: {
