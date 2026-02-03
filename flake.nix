@@ -129,7 +129,7 @@
       };
 
       homeConfigurations."bear@hoard" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.aarch64-linux;
+        pkgs = pkgsFor.x86_64-linux;
         extraSpecialArgs = { inherit inputs outputs; };
         modules = [ ./home-manager/fusion.nix ];
       };
@@ -139,7 +139,6 @@
         extraSpecialArgs = { inherit inputs outputs; };
         modules = [
           ./home-manager/fusion.nix
-          { nixpkgs.hostPlatform = pkgs.lib.mkForce "x86_64-linux"; }
         ];
       };
 
