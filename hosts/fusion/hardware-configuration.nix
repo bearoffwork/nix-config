@@ -7,7 +7,7 @@
   imports = [ ];
 
   boot.initrd.availableKernelModules = [ "virtio_pci" "xhci_pci" "usbhid" "usb_storage" ];
-  boot.initrd.kernelModules = [ ];
+  boot.initrd.kernelModules = [ "virtio_gpu" ];
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 

@@ -15,6 +15,7 @@
     ./neovim
     ./wezterm
     ./niri
+    ./hypr
   ];
 
   nixpkgs.config.allowUnfreePredicate =

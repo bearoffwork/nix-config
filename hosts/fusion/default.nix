@@ -40,6 +40,9 @@
     mesa-demos
     adwaita-icon-theme
     flat-remix-icon-theme
+    spice-vdagent # utm clipboard
+    pciutils
+
     # Copied from https://github.com/mitchellh/nixos-config/blob/main/machines/vm-shared.nix
     # For hypervisors that support auto-resizing, this script forces it.
     # I've noticed not everyone listens to the udev events so this is a hack.
@@ -56,7 +59,21 @@
   console.font = "ter-u32n";
 
   # virtualisation.vmware.guest.enable = true;
-  hardware.graphics.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = false; # Not supported on aarch64
+    extraPackages = with pkgs; [
+      mesa.drivers
+    ];
+  };
+
+  # Ensure virtio-gpu module is loaded with proper options
+  boot.kernelModules = [ "virtio_gpu" ];
+  boot.extraModprobeConfig = ''
+    options virtio_gpu modeset=1
+  '';
+
+  services.qemuGuest.enable = true;
 
   programs.zsh.enable = true;
 
