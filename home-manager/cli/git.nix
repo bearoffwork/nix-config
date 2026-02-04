@@ -20,12 +20,27 @@
     git = {
       enable = true;
 
-      includes = [
-        {
-          condition = "hasconfig:remote.*.url:https://github.com/euimoney/**";
-          contents.user.email = "bear@eui.money";
-        }
-      ];
+      includes =
+        let
+          workProfile = {
+            contents = {
+              user = {
+                email = "bear@eui.money";
+                name = "Bear Yu";
+              };
+            };
+          };
+        in
+        [
+          {
+            inherit (workProfile) contents;
+            condition = "gitdir:~/src/eui/";
+          }
+          {
+            inherit (workProfile) contents;
+            condition = "hasconfig:remote.*.url:**/euimoney/**";
+          }
+        ];
 
       settings = {
         user.name = "Bear.Y";

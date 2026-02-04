@@ -43,15 +43,8 @@
         mypkgs = final: _prev: {
           p = import nix-packages { inherit (final) lib system; };
         };
-        unstable-pkgs = final: _prev: {
-          unstable = import nixpkgs-unstable rec {
-            inherit (final) lib system;
-            config.allowUnfreePredicate =
-              pkg:
-              builtins.elem (lib.getName pkg) [
-                "tart"
-              ];
-          };
+        stable-pkgs = final: _prev: {
+          stable = import nixpkgs { inherit (final) lib system; };
         };
       };
 
@@ -61,7 +54,7 @@
           inherit system;
           overlays = with overlays; [
             mypkgs
-            unstable-pkgs
+            stable-pkgs
           ];
         }
       );
@@ -69,9 +62,9 @@
       modules = import ./modules/top-level/all-modules.nix { inherit (nixpkgs) lib; };
 
       mkHost =
-        name:
+        name: systemModules:
         {
-          systemBuilder,
+          systemBuilder ? nixpkgs-unstable.lib.nixosSystem,
           modules ? [ ],
         }:
         systemBuilder {
@@ -86,7 +79,7 @@
             }
             ./hosts/${name}
           ]
-          ++ modules;
+          ++ systemModules;
         };
     in
     {
@@ -149,20 +142,19 @@
       #     }).config.system.build.isoImage;
       # });
 
-      devShells = forAllSystems (
-        system:
-        let
-          pkgs = pkgsFor.${system};
-        in
-        {
-          default = pkgs.mkShell {
-            packages = with pkgs; [
-              # tart
-              nixos-rebuild
-            ];
-          };
-        }
-      );
+      # devShells = forAllSystems (
+      #   system:
+      #   let
+      #     pkgs = pkgsFor.${system};
+      #   in
+      #   {
+      #     default = pkgs.mkShell {
+      #       packages = with pkgs; [
+      #         nixos-rebuild
+      #       ];
+      #     };
+      #   }
+      # );
 
       formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
     };

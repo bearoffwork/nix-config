@@ -22,7 +22,6 @@
   nixpkgs.config.allowUnfreePredicate =
     pkg:
     builtins.elem (lib.getName pkg) [
-      "claude-code"
       "google-chrome"
     ];
 
@@ -65,7 +64,6 @@
     dig
     viddy
     duckdb
-    claude-code
     opencode
   ];
 

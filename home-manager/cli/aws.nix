@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    ssm-session-manager-plugin
+    stable.ssm-session-manager-plugin
   ];
   programs.awscli = {
     enable = true;
