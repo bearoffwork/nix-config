@@ -47,17 +47,21 @@
         region = "ap-northeast-1";
         output = "json";
       };
-      "profile tpe-ape2" = {
+      "profile 0734-admin" = {
         region = "ap-east-2";
         output = "json";
       };
-      "profile tpe-ape2-ro" = {
+      "profile 0734-ro" = {
         role_arn = "arn:aws:iam::073419086835:role/global-ro";
         source_profile = "tpe-ape2";
         region = "ap-east-2";
         output = "json";
       };
-      "profile tpe-ape2-test" = {
+      "profile 0734-bear" = {
+        region = "ap-east-2";
+        output = "json";
+      };
+      "profile 0734-nathan" = {
         region = "ap-east-2";
         output = "json";
       };

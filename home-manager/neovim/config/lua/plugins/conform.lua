@@ -3,6 +3,16 @@
 return {
     {
         "conform.nvim",
+        keys = {
+            {
+                "ff",
+                function()
+                    require("conform").format({ async = true, lsp_format = "fallback" })
+                end,
+                mode = { "n", "v" },
+                desc = "Format buffer",
+            },
+        },
         after = function()
             require("conform").setup({
                 -- Map of filetype to formatters
@@ -83,6 +93,13 @@ return {
                             }),
                         },
                         -- stdin = true,
+                    },
+                    jq = {
+                        args = function()
+                            local indent = vim.bo.shiftwidth > 0 and vim.bo.shiftwidth
+                                or vim.bo.tabstop
+                            return { "--indent", tostring(indent) }
+                        end,
                     },
                 },
                 -- Set this to change the default values when calling conform.format()
