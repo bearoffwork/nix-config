@@ -4,8 +4,18 @@
 }:
 
 {
+
+  users.defaultUserShell = pkgs.zsh;
+
+  programs.zsh.enable = true;
+
+  programs.neovim = {
+    enable = true;
+    viAlias = true;
+    vimAlias = true;
+  };
+
   environment.systemPackages = with pkgs; [
-    neovim
     git
     curl
     wget
@@ -15,4 +25,5 @@
     viddy
     jq
   ];
+
 }

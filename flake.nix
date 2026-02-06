@@ -27,115 +27,109 @@
   outputs =
     {
       self,
-      nixpkgs,
-      nixpkgs-unstable,
-      nix-packages,
-      nix-darwin,
-      home-manager,
       ...
-    }@inputs:
+    }:
+
     let
-      inherit (self) outputs;
+      inherit (self) outputs inputs;
+      inherit (inputs.nixpkgs-unstable) lib;
 
-      forAllSystems = nixpkgs.lib.genAttrs nixpkgs.lib.systems.flakeExposed;
+      forAllSystems = lib.genAttrs lib.systems.flakeExposed;
 
-      overlays = {
-        mypkgs = final: _prev: {
-          p = import nix-packages { inherit (final) lib system; };
-        };
-        stable-pkgs = final: _prev: {
-          stable = import nixpkgs { inherit (final) lib system; };
-        };
-      };
+      pkgs-overlays = [
+        # release
+        (final: prev: {
+          stable = import inputs.nixpkgs { inherit (final) system; };
+        })
+        # latest
+        (final: prev: {
+          unstable = import inputs.nixpkgs-unstable { inherit (final) system; };
+        })
+        # mypkgs
+        (final: _prev: {
+          p = import inputs.nix-packages { inherit (final) lib system; };
+        })
+      ];
 
       pkgsFor = forAllSystems (
         system:
-        import nixpkgs-unstable {
+        import inputs.nixpkgs-unstable {
           inherit system;
-          overlays = with overlays; [
-            mypkgs
-            stable-pkgs
-          ];
+          overlays = pkgs-overlays;
         }
       );
 
-      modules = import ./modules/top-level/all-modules.nix { inherit (nixpkgs) lib; };
+      modules = lib.mapAttrs (name: m: m ++ [ { nixpkgs.overlays = pkgs-overlays; } ]) (
+        import ./modules/top-level/all-modules.nix { inherit lib; }
+      );
 
       mkHost =
-        name: systemModules:
+        systemModules: name:
         {
-          systemBuilder ? nixpkgs-unstable.lib.nixosSystem,
+          systemBuilder ? inputs.nixpkgs-unstable.lib.nixosSystem,
           modules ? [ ],
         }:
         systemBuilder {
           specialArgs = { inherit inputs outputs self; };
           modules = [
-            {
-              nixpkgs.overlays = with overlays; [
-                mypkgs
-                unstable-pkgs
-              ];
-              system.name = name;
-            }
+            { system.name = name; }
             ./hosts/${name}
           ]
-          ++ systemModules;
+          ++ systemModules
+          ++ modules;
         };
     in
     {
-      inherit modules;
+      inherit modules inputs;
 
-      nixosConfigurations = nixpkgs.lib.mapAttrs mkHost {
+      nixosConfigurations = lib.mapAttrs (mkHost modules.nixos) {
         hoard = {
-          systemBuilder = nixpkgs.lib.nixosSystem;
-          modules = modules.nixos;
+          systemBuilder = inputs.nixpkgs.lib.nixosSystem;
         };
-        installer = {
-          systemBuilder = nixpkgs-unstable.lib.nixosSystem;
-          modules = modules.nixos;
-        };
-        bench = {
-          systemBuilder = nixpkgs-unstable.lib.nixosSystem;
-          modules = modules.nixos;
-        };
-        rosetta = {
-          systemBuilder = nixpkgs-unstable.lib.nixosSystem;
-          modules = modules.nixos;
-        };
-        fusion = {
-          systemBuilder = nixpkgs-unstable.lib.nixosSystem;
-          modules = modules.nixos;
-        };
+        installer = { };
+        bench = { };
+        rosetta = { };
+        fusion = { };
       };
 
-      darwinConfigurations = nixpkgs.lib.mapAttrs mkHost {
+      darwinConfigurations = lib.mapAttrs (mkHost modules.darwin) {
         grind = {
-          systemBuilder = nix-darwin.lib.darwinSystem;
-          modules = modules.darwin;
+          systemBuilder = inputs.nix-darwin.lib.darwinSystem;
         };
       };
 
-      homeConfigurations."bear@grind" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.aarch64-darwin;
-        extraSpecialArgs = { inherit inputs outputs; };
-        modules = [ ./home-manager/home.nix ];
-      };
+      homeConfigurations =
+        let
+          hmConfig = inputs.home-manager.lib.homeManagerConfiguration;
 
-      homeConfigurations."bear@hoard" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.x86_64-linux;
-        extraSpecialArgs = { inherit inputs outputs; };
-        modules = [ ./home-manager/fusion.nix ];
-      };
+          # "system" identifies the pkgs, "modules" is your list of files/configs
+          mkHome =
+            system: modules:
+            let
+              pkgs = pkgsFor.${system};
+            in
+            hmConfig {
+              inherit pkgs modules;
+              extraSpecialArgs = { inherit inputs outputs; };
+            };
+        in
+        {
+          "bear@grind" = mkHome "aarch64-darwin" [
+            ./home-manager/home.nix
+          ];
 
-      homeConfigurations."bear@fusion" = home-manager.lib.homeManagerConfiguration {
-        pkgs = pkgsFor.aarch64-linux;
-        extraSpecialArgs = { inherit inputs outputs; };
-        modules = [
-          ./home-manager/fusion.nix
-        ];
-      };
+          "bear@hoard" = mkHome "x86_64-linux" [
+            ./home-manager/fusion.nix
+          ];
 
-      # packages = forAllSystems (system: {
+          "bear@rosetta" = mkHome "x86_64-linux" [
+            ./home-manager/fusion.nix
+          ];
+
+          "bear@fusion" = mkHome "aarch64-linux" [
+            ./home-manager/fusion.nix
+          ];
+        }; # packages = forAllSystems (system: {
       #   installer =
       #     (mkHost "installer" {
       #       modules = modules.nixos ++ [{nixpkgs.hostPlatform = system;}];
