@@ -14,8 +14,11 @@
     nixos-wsl.url = "github:nix-community/NixOS-WSL?ref=main";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
 
-    home-manager.url = "github:nix-community/home-manager?ref=master";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs-unstable";
+    home-manager.url = "github:nix-community/home-manager?ref=release-25.11";
+    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+
+    home-manager-unstable.url = "github:nix-community/home-manager?ref=master";
+    home-manager-unstable.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
     sops-nix.url = "github:Mic92/sops-nix?ref=master";
     sops-nix.inputs.nixpkgs.follows = "nixpkgs";
@@ -100,9 +103,8 @@
 
       homeConfigurations =
         let
-          hmConfig = inputs.home-manager.lib.homeManagerConfiguration;
+          hmConfig = inputs.home-manager-unstable.lib.homeManagerConfiguration;
 
-          # "system" identifies the pkgs, "modules" is your list of files/configs
           mkHome =
             system: modules:
             let
@@ -118,10 +120,6 @@
             ./home-manager/home.nix
           ];
 
-          "bear@hoard" = mkHome "x86_64-linux" [
-            ./home-manager/fusion.nix
-          ];
-
           "bear@rosetta" = mkHome "x86_64-linux" [
             ./home-manager/fusion.nix
           ];
@@ -129,7 +127,9 @@
           "bear@fusion" = mkHome "aarch64-linux" [
             ./home-manager/fusion.nix
           ];
-        }; # packages = forAllSystems (system: {
+        }; 
+
+      # packages = forAllSystems (system: {
       #   installer =
       #     (mkHost "installer" {
       #       modules = modules.nixos ++ [{nixpkgs.hostPlatform = system;}];
