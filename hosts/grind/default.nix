@@ -19,7 +19,13 @@
       max-jobs = "auto";
       cores = 0;
       sandbox = false;
+      # extra-sandbox-paths = [
+      #   "/etc/nix/netrc"
+      # ];
     };
+    # extraOptions = ''
+    #   netrc-file = /etc/nix/netrc
+    # '';
     linux-builder = {
       enable = true;
       ephemeral = true;

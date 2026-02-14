@@ -47,7 +47,7 @@
         })
         # mypkgs
         (final: _prev: {
-          p = import inputs.nix-packages { inherit (final) lib system; };
+          p = inputs.nix-packages.packages.${final.stdenv.hostPlatform.system};
         })
       ];
 

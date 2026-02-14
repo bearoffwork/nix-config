@@ -1,0 +1,74 @@
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Sid": "AllowCreateServiceLinkedRole",
+            "Effect": "Allow",
+            "Action": "iam:CreateServiceLinkedRole",
+            "Resource": "arn:aws:iam::*:role/aws-service-role/events.amazonaws.com/AWSServiceRoleForCloudWatchEvents*",
+            "Condition": {
+                "StringLike": {
+                    "iam:AWSServiceName": "events.amazonaws.com"
+                }
+            }
+        },
+        {
+            "Sid": "VisualEditor1New",
+            "Effect": "Allow",
+            "Action": [
+                "aws-portal:*",
+                "billing:*",
+                "consolidatedbilling:*",
+                "cur:*",
+                "freetier:*",
+                "invoicing:*",
+                "payments:*",
+                "purchase-orders:*",
+                "tax:*",
+                "sustainability:GetCarbonFootprintSummary"
+            ],
+            "Resource": "*"
+        },
+        {
+            "Sid": "AllowBillingBucketAccess",
+            "Effect": "Deny",
+            "Action": [
+                "s3:Get*",
+                "s3:List*"
+            ],
+            "Resource": [
+                "arn:aws:s3:::bill-607853595894-report",
+                "arn:aws:s3:::bill-607853595894-report/*"
+            ]
+        },
+        {
+            "Sid": "AccountExceptDangerousActions",
+            "Effect": "Allow",
+            "Action": [
+                "account:ListRegions",
+                "account:StartPrimaryEmailUpdate",
+                "account:PutContactInformation",
+                "account:PutAlternateContact",
+                "account:PutAccountName",
+                "account:DeleteAlternateContact",
+                "account:AcceptPrimaryEmailUpdate",
+                "account:GetRegionOptStatus",
+                "account:GetPrimaryEmail",
+                "account:GetGovCloudAccountInformation",
+                "account:GetContactInformation",
+                "account:GetAlternateContact",
+                "account:GetAccountInformation"
+            ],
+            "Resource": []
+        },
+        {
+            "Sid": "DenyDangerousAccountActions",
+            "Effect": "Deny",
+            "Action": [
+                "account:CloseAccount",
+                "account:DisableRegion"
+            ],
+            "Resource": "*"
+        }
+    ]
+}

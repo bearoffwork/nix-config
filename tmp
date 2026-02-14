@@ -1,0 +1,14 @@
+                "aws-portal:*",
+                "cur:*",
+                "purchase-orders:*",
+                "account:*AlternateContact",
+                "cur:*",
+                "purchase-orders:*",
+                "consolidatedbilling:*",
+                "freetier:*",
+                "invoicing:*",
+                "payments:*",
+                "billing:*",
+                "tax:*",
+                "sustainability:GetCarbonFootprintSummary"
+

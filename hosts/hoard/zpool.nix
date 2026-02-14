@@ -6,7 +6,7 @@
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs = {
     forceImportRoot = false;
-    extraPools = [ "pool-0" ];
+    extraPools = [ "tank" ];
     devNodes = "/dev/disk/by-id";
   };
 
