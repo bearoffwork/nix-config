@@ -15,9 +15,18 @@
   networking.hostName = "bench";
   networking.domain = "hope.home";
 
-  wsl.enable = true;
-  wsl.defaultUser = "bear";
-  wsl.useWindowsDriver = true;
+  wsl = {
+    enable = true;
+    defaultUser = "bear";
+    useWindowsDriver = true;
+    wslConf = {
+      network = {
+        networkingMode = "mirrored";
+        dnsTunneling = true;
+      };
+    };
+  };
+
   users.defaultUserShell = pkgs.zsh;
   programs.zsh.enable = true;
 
@@ -27,7 +36,7 @@
       name = lib.getName pkg;
     in
     lib.hasPrefix "cudatoolkit" name
-    || lib.hasPrefix "cuda-merged" name
+    || lib.hasPrefix "cuda" name
     || lib.hasPrefix "cudnn" name
     || lib.hasPrefix "nvidia-x11" name
     || lib.hasPrefix "nvidia" name

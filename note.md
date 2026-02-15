@@ -14,4 +14,8 @@ nix run github:nix-community/home-manager/master -- switch --flake .
 rsync -az ~/Library/Fonts/ComicCode* fusion:.local/share/fonts/
 ```
 
-
+```
+nix run github:nix-community/home-manager/master#home-manager -- \
+    switch \
+    --flake github:bearoffwork#bear@grind
+```
