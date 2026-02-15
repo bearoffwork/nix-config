@@ -17,6 +17,7 @@
     inputs.nixos-hardware.nixosModules.common-gpu-amd
     inputs.nixos-hardware.nixosModules.common-pc
     inputs.nixos-hardware.nixosModules.common-pc-ssd
+    ./network.nix
     ./zpool.nix
     ./users.nix
   ];
@@ -38,8 +39,6 @@
     enable = true;
     powertop.enable = true;
   };
-
-  networking.networkmanager.enable = true;
 
   # Set your time zone.
   time.timeZone = "Asia/Taipei";
@@ -84,7 +83,6 @@
     80
     443
   ];
-  # networking.firewall.allowedUDPPorts = [ ... ];
 
   system.stateVersion = "25.05";
 }
