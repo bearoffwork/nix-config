@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_12;
-  boot.zfs.package = pkgs.zfs_2_3;
+  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_18;
+  boot.zfs.package = pkgs.zfs_2_4;
 
   boot.supportedFilesystems = [ "zfs" ];
   boot.zfs = {
