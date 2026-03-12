@@ -13,13 +13,17 @@
       (pkgs.vimPlugins.nvim-treesitter.withPlugins (
         p: with p; [
           bash
+          c
           css
+          devicetree
           dockerfile
           go
+          hcl
           html
           javascript
           json
           just
+          kconfig
           lua
           markdown
           markdown-inline

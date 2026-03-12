@@ -82,6 +82,8 @@
             bindkey -e
             bindkey "^[[1;5C" forward-word
             bindkey "^[[1;5D" backward-word
+            bindkey '^P' up-history
+            bindkey '^N' down-history
           '')
           (lib.mkOrder 550 ''
             # enable bash completion

@@ -18,7 +18,7 @@
       trusted-users = [ "bear" ];
       max-jobs = "auto";
       cores = 0;
-      sandbox = false;
+      sandbox = true;
       # extra-sandbox-paths = [
       #   "/etc/nix/netrc"
       # ];
@@ -39,6 +39,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    neovim
     home-manager
     p.hammerspoon
   ];

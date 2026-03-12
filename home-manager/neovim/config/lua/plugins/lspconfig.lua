@@ -12,6 +12,22 @@ return {
             vim.lsp.enable("docker_language_server")
             vim.lsp.enable("docker_compose_language_service")
             vim.lsp.enable("basedpyright")
+            vim.lsp.enable("terraformls")
+
+            -- Requires: npm install -g devicetree-language-server
+            -- vim.lsp.enable("dtsls")
+
+            vim.lsp.config("clangd", {
+                cmd = {
+                    "clangd",
+                    "--background-index",
+                    "--clang-tidy",
+                    "--compile-commands-dir=build",
+                },
+                -- New way to define root markers (replaces util.root_pattern)
+                root_markers = { "west.yml", ".git", "zephyr/module.yml" },
+            })
+            vim.lsp.enable("clangd")
 
             vim.diagnostic.config({
                 severity_sort = true,

@@ -3,6 +3,8 @@
 return {
     {
         "conform.nvim",
+        event = { "BufWritePre" },
+        cmd = { "ConformInfo" },
         keys = {
             {
                 "ff",
@@ -24,6 +26,7 @@ return {
 
                     sh = { "shfmt" },
                     json = { "jq" },
+                    terraform = { "tofu_fmt" },
                     -- -- Conform will run multiple formatters sequentially
                     -- go = { "goimports", "gofmt", "golines" },
                     -- -- You can also customize some of the format options for the filetype
@@ -63,6 +66,9 @@ return {
                             "--collapse-simple-statement",
                             "Never",
                         },
+                    },
+                    tofu_fmt = {
+                        extra_args = { "-no-color" },
                     },
                     shfmt = {
                         extra_args = { "-i", "4", "-ci", "-bn" },

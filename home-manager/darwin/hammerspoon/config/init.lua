@@ -34,6 +34,7 @@ bindkey(hypr, "1", launchApp("Microsoft Edge"))
 bindkey(hypr, "2", launchApp("LibreChat"))
 bindkey(hypr, "3", launchApp("Microsoft Teams (PWA)"))
 bindkey(hypr, "4", launchApp("Google Chrome"))
+bindkey(hypr, "G", launchApp("Gemini"))
 
 bindkey(hypr, "L", launchApp("LINE"))
 bindkey(hypr, "P", launchApp("PhpStorm"))

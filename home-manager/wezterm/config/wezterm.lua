@@ -160,7 +160,7 @@ return {
       mods = "CTRL|SHIFT",
       action = wezterm.action_callback(function(window, pane)
         local tab, pane, window = window:mux_window():spawn_tab({
-          args = { "nvim", "+set wrap ft=markdown" },
+          args = { "/bin/zsh", "-l", "-c", "nvim '+set wrap ft=markdown'" }
         })
         tab:set_title(wezterm.nerdfonts.fa_edit .. " Quick Note")
       end),

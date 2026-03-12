@@ -8,6 +8,7 @@
 }:
 {
   imports = [
+    ./modules/top-level/all-modules.nix
     ./cli/aws.nix
     ./cli/direnv.nix
     ./cli/git.nix
@@ -24,6 +25,7 @@
     pkg:
     builtins.elem (lib.getName pkg) [
       "google-chrome"
+      "tart"
     ];
 
   home = {
@@ -66,6 +68,11 @@
     viddy
     duckdb
     opencode
+    p.git-graph
+    opentofu
+    terraform-ls
+    tart
+    nixos-rebuild
   ];
 
   home.sessionPath = [
@@ -74,6 +81,8 @@
 
   home.shellAliases = {
     j = "just";
+    gg = "git-graph";
+    tf = "tofu";
   };
 
   # Wayland environment variables for Chromium/Electron apps

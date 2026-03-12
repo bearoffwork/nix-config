@@ -1,3 +1,6 @@
+-- Paste over selected text without overwriting the register
+vim.keymap.set("x", "p", '"_dP')
+
 vim.keymap.set("n", "<leader>yp", function()
     local filename = vim.fn.expand("%")
     vim.fn.setreg("+", filename)

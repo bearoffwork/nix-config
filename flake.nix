@@ -11,6 +11,9 @@
     nix-darwin.url = "github:nix-darwin/nix-darwin?ref=master";
     nix-darwin.inputs.nixpkgs.follows = "nixpkgs-unstable";
 
+    nixos-lima.url = "github:nixos-lima/nixos-lima/master";
+    nixos-lima.inputs.nixpkgs.follows = "nixpkgs-unstable";
+
     nixos-wsl.url = "github:nix-community/NixOS-WSL?ref=main";
     nixos-wsl.inputs.nixpkgs.follows = "nixpkgs";
 
@@ -42,11 +45,11 @@
       pkgs-overlays = [
         # release
         (final: prev: {
-          stable = import inputs.nixpkgs { inherit (final) system; };
+          stable = import inputs.nixpkgs { inherit (final.stdenv.hostPlatform) system; };
         })
         # latest
         (final: prev: {
-          unstable = import inputs.nixpkgs-unstable { inherit (final) system; };
+          unstable = import inputs.nixpkgs-unstable { inherit (final.stdenv.hostPlatform) system; };
         })
         # mypkgs
         (final: _prev: {
@@ -93,6 +96,7 @@
         bench = { };
         rosetta = { };
         fusion = { };
+        booth = { };
       };
 
       darwinConfigurations = lib.mapAttrs (mkHost modules.darwin) {
@@ -127,28 +131,7 @@
           "bear@fusion" = mkHome "aarch64-linux" [
             ./home-manager/fusion.nix
           ];
-        }; 
-
-      # packages = forAllSystems (system: {
-      #   installer =
-      #     (mkHost "installer" {
-      #       modules = modules.nixos ++ [{nixpkgs.hostPlatform = system;}];
-      #     }).config.system.build.isoImage;
-      # });
-
-      # devShells = forAllSystems (
-      #   system:
-      #   let
-      #     pkgs = pkgsFor.${system};
-      #   in
-      #   {
-      #     default = pkgs.mkShell {
-      #       packages = with pkgs; [
-      #         nixos-rebuild
-      #       ];
-      #     };
-      #   }
-      # );
+        };
 
       formatter = forAllSystems (system: pkgsFor.${system}.nixfmt-tree);
     };

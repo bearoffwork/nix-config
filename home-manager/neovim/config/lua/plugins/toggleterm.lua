@@ -6,15 +6,12 @@ return {
         cmd = "ToggleTerm",
         keys = {
             {
-                "<Esc>",
+                "<C-c><C-c>",
                 function()
                     if vim.bo.filetype == "toggleterm" then
                         require("toggleterm").toggle()
                     end
                 end,
-                -- function()
-                --     require("toggleterm").toggle()
-                -- end,
                 mode = "t",
                 desc = "ToggleTerm",
             },
