@@ -88,6 +88,16 @@
     {
       inherit modules inputs;
 
+      packages = forAllSystems (
+        system:
+        let
+          pkgs = pkgsFor.${system};
+        in
+        {
+          booth-image = self.nixosConfigurations.booth.config.system.build.images.qemu-efi;
+        }
+      );
+
       nixosConfigurations = lib.mapAttrs (mkHost modules.nixos) {
         hoard = {
           systemBuilder = inputs.nixpkgs.lib.nixosSystem;
@@ -97,6 +107,9 @@
         rosetta = { };
         fusion = { };
         booth = { };
+        hydrus = {
+          systemBuilder = inputs.nixpkgs.lib.nixosSystem;
+        };
       };
 
       darwinConfigurations = lib.mapAttrs (mkHost modules.darwin) {
@@ -126,6 +139,10 @@
 
           "bear@rosetta" = mkHome "x86_64-linux" [
             ./home-manager/fusion.nix
+          ];
+
+          "bear@booth" = mkHome "aarch64-linux" [
+            ./home-manager/booth.nix
           ];
 
           "bear@fusion" = mkHome "aarch64-linux" [

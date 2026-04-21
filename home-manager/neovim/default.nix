@@ -9,6 +9,8 @@
     defaultEditor = true;
     viAlias = true;
     withNodeJs = true;
+    withPython3 = true;
+    withRuby = true;
     plugins = with pkgs.vimPlugins; [
       (pkgs.vimPlugins.nvim-treesitter.withPlugins (
         p: with p; [
@@ -52,15 +54,15 @@
       basedpyright # py lsp
       isort # py fmt
       black # py fmt
-      sqlfluff # sql fmt https://github.com/sqlfluff/sqlfluff
-      sqls # sql lsp https://github.com/sqls-server/sqls
+      # sqlfluff # sql fmt https://github.com/sqlfluff/sqlfluff
+      # sqls # sql lsp https://github.com/sqls-server/sqls
       sql-formatter
       taplo # toml fmt
     ];
   };
 
   xdg.configFile."nvim" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/p/nix-config/home-manager/neovim/config";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.srcDirectory}/p/nix-config/home-manager/neovim/config";
   };
 
   xdg.dataFile."nvim-packs" = {

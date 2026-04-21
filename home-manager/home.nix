@@ -1,6 +1,7 @@
 # This is your home-manager configuration file
 # Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
+  outputs,
   config,
   lib,
   pkgs,
@@ -15,11 +16,24 @@
     ./cli/git-work.nix
     ./cli/sops.nix
     ./cli/zsh
+    ./cli/common-utils.nix
     ./darwin
     ./neovim
     ./niri
     ./wezterm
   ];
+
+  nix.package = pkgs.nix;
+  nix.settings = {
+    trusted-substituters = [
+      "s3://nix-cache-073419086835-ap-east-2-an?region=ap-east-2&priority=12"
+      "https://cache.nixos.org?priority=64"
+    ];
+    trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "hydrus@eui.money-1:SnDYeQLMwu1k5DPR2L//f+TN+OnF/U9w3v6Mdm2PG1c="
+    ];
+  };
 
   nixpkgs.config.allowUnfreePredicate =
     pkg:
@@ -73,6 +87,7 @@
     terraform-ls
     tart
     nixos-rebuild
+    bruno
   ];
 
   home.sessionPath = [

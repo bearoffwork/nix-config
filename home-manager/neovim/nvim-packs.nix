@@ -7,11 +7,11 @@ let
   startPlugins = with pkgs.vimPlugins; [
     lz-n
     plenary-nvim
-    catppuccin-nvim
   ];
 
   optPlugins = with pkgs.vimPlugins; [
     blink-cmp
+    catppuccin-nvim
     conform-nvim
     diffview-nvim
     lazydev-nvim
@@ -23,8 +23,8 @@ let
     telescope-nvim
     todo-comments-nvim
     toggleterm-nvim
-    vim-dadbod
-    vim-dadbod-completion
+    # vim-dadbod
+    # vim-dadbod-completion
   ];
   # Define plugins here first
   mkPluginMap =

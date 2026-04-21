@@ -48,6 +48,16 @@ local function tab_title(tab_info)
 
   -- For other processes (ssh, vim, etc.), use the pane title
   if active_pane_title and #active_pane_title > 0 then
+    if active_pane_title:match("OpenCode") then
+      icon = wezterm.nerdfonts.oct_dependabot
+      -- active_pane_title = active_pane_title:gsub("^OC |%s*", "")
+    end
+
+    if active_pane_title:match("^OC |") then
+      icon = wezterm.nerdfonts.oct_dependabot
+      active_pane_title = active_pane_title:gsub("^OC |%s*", "")
+    end
+
     wezterm.log_info(string.format("[Tab %d] Using active_pane.title", tab_info.tab_index + 1))
 
     -- Check if title starts with alphanumeric character
@@ -82,7 +92,7 @@ wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_wid
   local title = wezterm.truncate_right(tab_title(tab), max_width - 3)
 
   return {
-    { Text = "ǀ " .. title .. " " },
+    { Text = wezterm.nerdfonts.cod_kebab_vertical .. " " .. title .. " " },
   }
 end)
 
@@ -121,7 +131,7 @@ return {
   -- tab bar
   enable_tab_bar = true,
   use_fancy_tab_bar = false,
-  tab_max_width = 40,
+  tab_max_width = 24,
   tab_bar_at_bottom = true,
   show_tab_index_in_tab_bar = false,
   show_new_tab_button_in_tab_bar = false,
@@ -160,7 +170,7 @@ return {
       mods = "CTRL|SHIFT",
       action = wezterm.action_callback(function(window, pane)
         local tab, pane, window = window:mux_window():spawn_tab({
-          args = { "/bin/zsh", "-l", "-c", "nvim '+set wrap ft=markdown'" }
+          args = { "/bin/zsh", "-l", "-c", "nvim '+set wrap ft=markdown'" },
         })
         tab:set_title(wezterm.nerdfonts.fa_edit .. " Quick Note")
       end),

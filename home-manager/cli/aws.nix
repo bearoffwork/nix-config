@@ -1,11 +1,15 @@
-{ pkgs, ... }:
+{
+  outputs,
+  pkgs,
+  ...
+}:
+
 {
   home.packages = with pkgs; [
-    stable.ssm-session-manager-plugin
+    ssm-session-manager-plugin
   ];
   programs.awscli = {
     enable = true;
-    package = pkgs.awscli2;
     settings = {
       "sso-session eui-tpe" = {
         sso_region = "ap-east-2";
@@ -56,6 +60,27 @@
       "profile 0734-ro" = {
         sso_session = "eui-tpe";
         sso_account_id = "073419086835";
+        sso_role_name = "AWSReadOnlyAccess";
+        region = "ap-east-2";
+        output = "json";
+      };
+      "profile 2680-admin" = {
+        sso_session = "eui-tpe";
+        sso_account_id = "268054298234";
+        sso_role_name = "AWSAdministratorAccess";
+        region = "ap-east-2";
+        output = "json";
+      };
+      "profile 2680-bear" = {
+        sso_session = "eui-tpe";
+        sso_account_id = "268054298234";
+        sso_role_name = "InfraTeam";
+        region = "ap-east-2";
+        output = "json";
+      };
+      "profile 2680-ro" = {
+        sso_session = "eui-tpe";
+        sso_account_id = "268054298234";
         sso_role_name = "AWSReadOnlyAccess";
         region = "ap-east-2";
         output = "json";

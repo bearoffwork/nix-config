@@ -1,5 +1,7 @@
 {
   inputs,
+  modulesPath,
+  lib,
   pkgs,
   ...
 }:
@@ -10,20 +12,12 @@
     inputs.home-manager-unstable.nixosModules.home-manager
   ];
 
-  environment.systemPackages = with pkgs; [
-    nh
-  ];
-
   nix.settings = {
-    trusted-users = [ "bear" ];
-    substituters = [
-      "s3://nix-cache-073419086835-ap-east-2-an?region=ap-east-2"
-    ];
     trusted-public-keys = [
-      "hydrus@eui.money-1:SnDYeQLMwu1k5DPR2L//f+TN+OnF/U9w3v6Mdm2PG1c="
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "bear@eui.money-1:4dQBVLD/RpIvnZ4CJdbDPBgWJD36Fo4j+mint4byLFg="
     ];
   };
-  nix.extraOptions = "!include /etc/nix/access-tokens.conf";
 
   # image.name = "booth";
   image.modules.qemu-efi = {
@@ -32,7 +26,7 @@
 
   home-manager.useGlobalPkgs = true;
   home-manager.useUserPackages = true;
-  home-manager.users.bear = ../../home-manager/booth.nix;
+  # home-manager.users.bear = ../../home-manager/booth.nix;
 
   system.stateVersion = "25.11";
 }

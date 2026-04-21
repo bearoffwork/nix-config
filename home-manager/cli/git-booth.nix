@@ -24,32 +24,9 @@
     };
     git = {
       enable = true;
-
-      includes =
-        let
-          workProfile = {
-            contents = {
-              user = {
-                email = "bear@eui.money";
-                name = "Bear Yu";
-              };
-            };
-          };
-        in
-        [
-          {
-            inherit (workProfile) contents;
-            condition = "gitdir:~/src/eui/";
-          }
-          {
-            inherit (workProfile) contents;
-            condition = "hasconfig:remote.*.url:**/euimoney/**";
-          }
-        ];
-
       settings = {
         user.name = "Bear.Y";
-        user.email = "code@bearoff.work";
+        user.email = "bear@eui.money";
 
         core = {
           fsmonitor = true;

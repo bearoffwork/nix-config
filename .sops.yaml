@@ -1,0 +1,7 @@
+keys:
+  - &grind age18vnpa96azc592y2k6znvgsmk3ha5hp2z5j5fvkp7gynuapsr6sfsynfq4t
+creation_rules:
+  - path_regex: secrets/grind\.json$
+    key_groups:
+      - age:
+          - *grind

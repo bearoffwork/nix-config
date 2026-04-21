@@ -22,20 +22,28 @@
       # extra-sandbox-paths = [
       #   "/etc/nix/netrc"
       # ];
+
+      secret-key-files = [
+        "/etc/nix/nix-store-secret.key"
+      ];
     };
-    # extraOptions = ''
-    #   netrc-file = /etc/nix/netrc
-    # '';
     linux-builder = {
       enable = true;
       ephemeral = true;
       maxJobs = 8;
       config = {
-        virtualisation.darwin-builder.diskSize = 30 * 1024;
-        virtualisation.darwin-builder.memorySize = 16 * 1024;
-        virtualisation.cores = 8;
+        virtualisation = {
+          darwin-builder = {
+            diskSize = 120 * 1024;
+            memorySize = 16 * 1024;
+          };
+          cores = 6;
+        };
       };
     };
+    # extraOptions = ''
+    #   netrc-file = /etc/nix/netrc
+    # '';
   };
 
   environment.systemPackages = with pkgs; [
@@ -47,11 +55,6 @@
   environment.etc = {
     "nix-darwin" = {
       source = "/Users/bear/src/p/nix-config";
-    };
-    "resolver/th-dev.internal" = {
-      text = ''
-        nameserver 172.18.0.2
-      '';
     };
   };
 

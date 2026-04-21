@@ -66,11 +66,16 @@
       # https://github.com/zsh-users/zsh-history-substring-search
       historySubstringSearch.enable = true;
 
+      setOptions = [
+        "interactive_comments"
+      ];
+
       # Store history file to xdg data directory for keeping home directory clean.
 
       initContent = lib.mkMerge (
         [
           (lib.mkOrder 500 ''
+            export WORDCHARS="*?_-.[]~/&;!#$%^(){}<>"
             export XDG_CONFIG_HOME="$HOME/.config"
 
             # prompt at bottom
