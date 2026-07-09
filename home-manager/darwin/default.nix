@@ -6,7 +6,7 @@
   ];
 
   home.packages = with pkgs; [
-    utm
+    # utm
     maccy
   ];
 }

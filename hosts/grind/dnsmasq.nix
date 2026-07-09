@@ -29,6 +29,7 @@ in
     services.dnsmasq = {
       enable = true;
       bind = "127.0.0.1";
+      # bind = "0.0.0.0";
       port = 53;
       servers = [
         "1.1.1.1"
@@ -36,12 +37,15 @@ in
       ];
       addresses = {
         "test" = "127.0.0.1";
+        # "ph.eui.money" = "166.117.64.23";
+        # "ph.transaction.eui.money" = "166.117.64.23";
+        # "ph.admin.eui.money" = "166.117.64.23";
       };
-      cnames = {
-        "ph.eui.money" = "remit-ph-853570513.ap-east-2.elb.amazonaws.com";
-        "ph.transaction.eui.money" = "remit-ph-853570513.ap-east-2.elb.amazonaws.com";
-        "ph.admin.eui.money" = "remit-ph-853570513.ap-east-2.elb.amazonaws.com";
-      };
+      # cnames = {
+      #   "ph.eui.money" = "remit-ph-853570513.ap-east-2.elb.amazonaws.com";
+      #   "ph.transaction.eui.money" = "remit-ph-853570513.ap-east-2.elb.amazonaws.com";
+      #   "ph.admin.eui.money" = "remit-ph-853570513.ap-east-2.elb.amazonaws.com";
+      # };
     };
 
     launchd.daemons.dnsmasq.command = lib.mkForce (
@@ -59,11 +63,11 @@ in
     );
 
     environment.etc = {
-      "resolver/eui.money" = {
-        text = ''
-          nameserver 127.0.0.1
-        '';
-      };
+      # "resolver/eui.money" = {
+      #   text = ''
+      #     nameserver 127.0.0.1
+      #   '';
+      # };
       "resolver/th-dev.internal" = {
         text = ''
           nameserver 172.18.0.2

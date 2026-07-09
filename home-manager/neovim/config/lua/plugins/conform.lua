@@ -28,7 +28,7 @@ return {
                     json = { "jq" },
                     terraform = { "tofu_fmt" },
                     -- -- Conform will run multiple formatters sequentially
-                    -- go = { "goimports", "gofmt", "golines" },
+                    go = { "goimports-reviser", "gofmt", "golines" },
                     -- -- You can also customize some of the format options for the filetype
                     -- rust = { "rustfmt", lsp_format = "fallback" },
                     -- You can use a function here to determine the formatters dynamically

@@ -41,6 +41,9 @@
         };
       };
     };
+
+    extraOptions = "!include /etc/nix/access-tokens.conf";
+
     # extraOptions = ''
     #   netrc-file = /etc/nix/netrc
     # '';

@@ -25,6 +25,12 @@
         region = "ap-northeast-1";
         output = "json";
       };
+      "profile 0263-ro" = {
+        role_arn = "arn:aws:iam::026374454234:role/readonly-anything";
+        source_profile = "0263-bear";
+        region = "ap-northeast-1";
+        output = "json";
+      };
       "profile 0424-bear" = {
         region = "ap-northeast-1";
         output = "json";
@@ -40,7 +46,7 @@
         sso_session = "eui-tpe";
         sso_account_id = "607853595894";
         sso_role_name = "AWSAdministratorAccess";
-        region = "us-east-1";
+        region = "ap-east-2";
         output = "json";
       };
       "profile 0734-admin" = {
@@ -83,6 +89,12 @@
         sso_account_id = "268054298234";
         sso_role_name = "AWSReadOnlyAccess";
         region = "ap-east-2";
+        output = "json";
+      };
+      "profile 2680-tf-ro" = {
+        role_arn = "arn:aws:iam::268054298234:role/tfexec-readonly";
+        source_profile = "2680-admin";
+        region = "ap-northeast-1";
         output = "json";
       };
       "profile 0734-nathan" = {

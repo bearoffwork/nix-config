@@ -74,6 +74,7 @@
         init.defaultBranch = "main";
         pull.rebase = true;
         rebase.autoStash = true;
+        push.autoSetupRemote = true;
         merge.ff = false;
         rerere.enabled = true;
         # disable mac keychain to fix gh randomly unauthorized issue.

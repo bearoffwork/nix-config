@@ -88,6 +88,7 @@
     tart
     nixos-rebuild
     bruno
+    nh
   ];
 
   home.sessionPath = [

@@ -47,6 +47,7 @@ local function tab_title(tab_info)
   local active_pane_title = tab_info.active_pane.title
 
   -- For other processes (ssh, vim, etc.), use the pane title
+  --
   if active_pane_title and #active_pane_title > 0 then
     if active_pane_title:match("OpenCode") then
       icon = wezterm.nerdfonts.oct_dependabot
@@ -66,7 +67,7 @@ local function tab_title(tab_info)
     if starts_with_normal then
       return tab_num .. icon .. " " .. active_pane_title
     else
-      return tab_num .. " " .. active_pane_title
+      return tab_num .. active_pane_title
     end
   end
 
@@ -89,10 +90,20 @@ local function tab_title(tab_info)
 end
 
 wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-  local title = wezterm.truncate_right(tab_title(tab), max_width - 3)
+  local title = tab_title(tab)
+  local prefix = tab.tab_index == 0 and " " or wezterm.nerdfonts.cod_kebab_vertical
+
+  -- Calculate how much room we actually have for the text
+  -- (prefix + 2 spaces padding = 3 cells)
+  local available_width = max_width - 3
+
+  if wezterm.column_width(title) > available_width then
+    -- Truncate to available_width - 1 to make room for the 1-cell ellipsis
+    title = wezterm.truncate_right(title, available_width - 1) .. "…"
+  end
 
   return {
-    { Text = wezterm.nerdfonts.cod_kebab_vertical .. " " .. title .. " " },
+    { Text = prefix .. " " .. title .. " " },
   }
 end)
 
@@ -187,6 +198,14 @@ return {
       key = "RightArrow",
       mods = "CTRL|SHIFT",
       action = wezterm.action.MoveTabRelative(1),
+    },
+    {
+      key = "E",
+      mods = "CTRL|SHIFT",
+      action = wezterm.action_callback(function(window, pane)
+        local ansi = window:get_selection_escapes_for_pane(pane)
+        window:copy_to_clipboard(ansi)
+      end),
     },
 
     -- for line breaking

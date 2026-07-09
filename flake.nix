@@ -95,6 +95,22 @@
         in
         {
           booth-image = self.nixosConfigurations.booth.config.system.build.images.qemu-efi;
+
+          urldecode = pkgs.writeShellApplication {
+            name = "urldecode";
+            runtimeInputs = [ pkgs.lua ];
+            text = ''
+              lua ${./scripts/urldecode.lua} "$@"
+            '';
+          };
+
+          urlencode = pkgs.writeShellApplication {
+            name = "urlencode";
+            runtimeInputs = [ pkgs.lua ];
+            text = ''
+              lua ${./scripts/urlencode.lua} "$@"
+            '';
+          };
         }
       );
 
