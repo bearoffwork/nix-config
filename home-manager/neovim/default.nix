@@ -11,6 +11,7 @@
     withNodeJs = true;
     withPython3 = true;
     withRuby = true;
+    sideloadInitLua = true;
     plugins = with pkgs.vimPlugins; [
       (pkgs.vimPlugins.nvim-treesitter.withPlugins (
         p: with p; [
@@ -64,6 +65,12 @@
   xdg.configFile."nvim" = {
     source = config.lib.file.mkOutOfStoreSymlink "${config.home.srcDirectory}/p/nix-config/home-manager/neovim/config";
   };
+  # xdg.configFile."nvim/lsp" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/p/nix-config/home-manager/neovim/config/lsp";
+  # };
+  # xdg.configFile."nvim/lua" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/p/nix-config/home-manager/neovim/config/lua";
+  # };
 
   xdg.dataFile."nvim-packs" = {
     source = pkgs.callPackage ./nvim-packs.nix { };

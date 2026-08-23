@@ -12,6 +12,10 @@
     (inputs.nixos-lima + "/lima-init.nix")
   ];
 
+  image.modules.qemu-efi = {
+    image.baseName = "booth";
+  };
+
   services.lima.enable = true;
   services.openssh = {
     enable = true;

@@ -1,5 +1,9 @@
-{ ... }:
 {
+  pkgs,
+  ...
+}:
+{
+  users.defaultUserShell = pkgs.zsh;
   users.users = {
     bear = {
       extraGroups = [
@@ -8,4 +12,6 @@
       ];
     };
   };
+
+  programs.zsh.enable = true;
 }

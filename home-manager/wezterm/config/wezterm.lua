@@ -124,6 +124,8 @@ return {
   initial_cols = 112,
   initial_rows = 28,
 
+  audible_bell = "Disabled",
+
   max_fps = max_fps,
   front_end = "WebGpu",
   underline_thickness = "1.5pt",

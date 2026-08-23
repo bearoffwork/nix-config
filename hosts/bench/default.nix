@@ -27,9 +27,6 @@
     };
   };
 
-  users.defaultUserShell = pkgs.zsh;
-  programs.zsh.enable = true;
-
   nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.05";
 }

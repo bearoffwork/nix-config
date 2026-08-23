@@ -12,7 +12,7 @@
     ./cli/git-booth.nix
     ./cli/sops.nix
     ./cli/zsh
-    ./neovim
+    # ./neovim
   ];
 
   home = {
@@ -21,9 +21,9 @@
     srcDirectory = "/Users/${config.home.username}/src";
   };
 
-  xdg.configFile."home-manager" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.srcDirectory}/p/nix-config";
-  };
+  # xdg.configFile."home-manager" = {
+  #   source = config.lib.file.mkOutOfStoreSymlink "${config.home.srcDirectory}/p/nix-config";
+  # };
 
   home.packages = with pkgs; [
     git
