@@ -36,6 +36,9 @@ return {
                     -- sql = { "sqlfluff" },
                     python = { "isort", "black" },
                     toml = { "taplo" },
+                    javascript = { "prettierd" },
+                    typescript = { "prettierd" },
+                    svelte = { "prettierd" },
                     -- python = function(bufnr)
                     --     if require("conform").get_formatter_info("ruff_format", bufnr).available then
                     --         return { "ruff_format" }

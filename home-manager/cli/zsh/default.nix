@@ -1,9 +1,14 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
   ...
 }:
+
+let
+  isWsl = osConfig != null && osConfig.wsl.enable or false;
+in
 {
   imports = [
     ./starship.nix
@@ -99,6 +104,20 @@
           (lib.mkOrder 1000 ''
             # enable awscli completion
             complete -C '${pkgs.awscli2}/bin/aws_completer' aws
+          '')
+        ]
+        ++ lib.optionals isWsl [
+          (lib.mkOrder 900 ''
+            # WezTerm OSC 7 directory tracking
+            function wezterm_osc7() {
+              printf "\e]7;file://%s%s\e\\" "$HOST" "$PWD"
+            }
+
+            # Append it to the hook array so it runs alongside direnv and zoxide
+            chpwd_functions+=(wezterm_osc7)
+
+            # Run it once to set the directory on initial shell load
+            wezterm_osc7
           '')
         ]
       );

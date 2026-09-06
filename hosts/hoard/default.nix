@@ -19,7 +19,9 @@
     inputs.nixos-hardware.nixosModules.common-pc-ssd
     ./network.nix
     ./zpool.nix
-    ./iscsi.nix
+    # ./iscsi
+    # ./homepage.nix
+    ./smb.nix
     ./users.nix
   ];
 

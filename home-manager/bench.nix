@@ -8,22 +8,13 @@
 }:
 {
   imports = [
-    # ./cli/aws.nix
+  modules/by-name/hm-srcdir.nix
     ./cli/direnv.nix
     ./cli/git.nix
     ./cli/sops.nix
     ./cli/zsh
-    # ./darwin
     ./neovim
-    # ./wezterm
   ];
-
-  nixpkgs.config.allowUnfreePredicate =
-    pkg:
-    builtins.elem (lib.getName pkg) [
-      "claude-code"
-      "google-chrome"
-    ];
 
   systemd.user.sockets.podman = {
     Unit = {
@@ -41,7 +32,7 @@
   home = {
     username = "bear";
     homeDirectory =
-      if pkgs.stdenv.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}";
+      if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}";
   };
 
   xdg.configFile."home-manager" = {
@@ -75,7 +66,6 @@
     dust
     dig
     viddy
-    claude-code
   ];
 
   home.sessionPath = [
@@ -91,11 +81,6 @@
   programs.git.enable = true;
   programs.bash.enable = true;
   programs.zsh.enable = true;
-
-  # programs.google-chrome = {
-  #   enable = true;
-  #   package = pkgs.google-chrome;
-  # };
 
   systemd.user.startServices = "sd-switch";
   home.stateVersion = "25.05";

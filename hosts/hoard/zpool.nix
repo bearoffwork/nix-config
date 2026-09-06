@@ -1,13 +1,20 @@
 { pkgs, ... }:
 {
-  boot.kernelPackages = pkgs.linuxKernel.packages.linux_6_18;
-  boot.zfs.package = pkgs.zfs_2_4;
-
-  boot.supportedFilesystems = [ "zfs" ];
-  boot.zfs = {
-    forceImportRoot = false;
-    extraPools = [ "tank" ];
-    devNodes = "/dev/disk/by-id";
+  boot = {
+    kernelPackages = pkgs.linuxKernel.packages.linux_6_18;
+    kernelParams = [
+      "zfs.zfs_arc_max=85899345920"
+    ];
+    supportedFilesystems = [ "zfs" ];
+    zfs = {
+      package = pkgs.zfs_2_4;
+      forceImportRoot = false;
+      extraPools = [ "tank" ];
+      devNodes = "/dev/disk/by-id";
+    };
+    extraModprobeConfig = ''
+      options zfs zfs_vdev_async_read_max_active=16 zfs_vdev_async_write_max_active=32 zfs_vdev_sync_read_max_active=32 zfs_vdev_sync_write_max_active=32 zfs_dirty_data_max=8589934592
+    '';
   };
 
   networking.hostId = "34186bf7";
@@ -18,5 +25,6 @@
     trim.enable = true;
   };
 
-  services.fstrim.enable = true;
+  # autotrim=on is set on the pool directly; fstrim is redundant.
+  # services.fstrim.enable = true;
 }
