@@ -30,9 +30,12 @@
         "path" = "/tank/bear/ws-d";
         "browseable" = "yes";
         "read only" = "no";
-        "valid users" = "bear";
+        "valid users" = "@smbusers";
+        "force user" = "bear";
         "create mask" = "0664";
         "directory mask" = "0775";
+
+        "acl allow execute always" = "yes";
       };
     };
   };

@@ -23,6 +23,7 @@
     # ./homepage.nix
     ./smb.nix
     ./users.nix
+    ./ups
   ];
 
   # Use the systemd-boot EFI boot loader.

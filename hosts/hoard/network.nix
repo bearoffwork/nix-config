@@ -49,6 +49,7 @@
         linkConfig = {
           RequiredForOnline = "routable";
           MTUBytes = 9000;
+          Multicast = true;
         };
 
         networkConfig = {
@@ -58,6 +59,7 @@
 
           # Enable the DHCP server on this port
           DHCPServer = "yes";
+          MulticastDNS = "yes";
         };
 
         dhcpServerConfig = {
@@ -71,5 +73,12 @@
       };
 
     };
+  };
+
+  services.resolved = {
+    enable = true;
+    extraConfig = ''
+      MulticastDNS=true
+    '';
   };
 }
