@@ -11,6 +11,7 @@
     withNodeJs = true;
     withPython3 = true;
     withRuby = true;
+    sideloadInitLua = true;
     # sideloadInitLua = true; # not yet in stable nixpkgs (25.11)
     plugins = with pkgs.vimPlugins; [
       (pkgs.vimPlugins.nvim-treesitter.withPlugins (
@@ -63,7 +64,7 @@
   };
 
   xdg.configFile."nvim" = {
-    source = config.lib.file.mkOutOfStoreSymlink "${config.home.srcDirectory}/p/nix-config/home-manager/neovim/config";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/p/nix-config/home-manager/neovim/config";
   };
 
   xdg.dataFile."nvim-packs" = {

@@ -1,86 +1,76 @@
 {
   inputs,
+  outputs,
   lib,
   pkgs,
   ...
 }:
 {
   imports = [
-    inputs.nixos-hardware.nixosModules.framework-amd-ai-300-series
-    inputs.disko.nixosModules.disko
-    ./disko.nix
+    inputs.home-manager.nixosModules.home-manager
+    inputs.sops-nix.nixosModules.sops
+    ./hardware.nix
+    ./network.nix
+    ./nix-settings.nix
     ./users.nix
+    ./virt.nix
+    ./llm
   ];
 
-  nixpkgs.config.allowUnfree = true;
-
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.timeout = 1;
-  boot.loader.efi.canTouchEfiVariables = true;
-  boot.loader.efi.efiSysMountPoint = "/boot/efi";
-  boot.kernelPackages = pkgs.linuxPackages_latest;
-
-  networking.networkmanager = {
-    enable = true;
-    dns = "none";
-    insertNameservers = [
-      "1.1.1.1"
-      "168.95.1.1"
+  nixpkgs = {
+    config = {
+      rocmSupport = true;
+      allowUnfreePredicate =
+        pkg:
+        builtins.elem (lib.getName pkg) [
+          "cloudflare-warp"
+          "mongodb"
+        ];
+    };
+    overlays = [
+      outputs.overlays.rocm-only-gfx1151
+      outputs.overlays.unstable-pkgs
     ];
   };
-  networking.nameservers = [
-    "1.1.1.1"
-    "168.95.1.1"
-  ];
 
   environment.systemPackages = with pkgs; [
-    xrandr
-    wl-clipboard
-    mesa-demos
-    adwaita-icon-theme
-    flat-remix-icon-theme
-    spice-vdagent # utm clipboard
+    amd-debug-tools
+    amdgpu_top
+    rocmPackages.rocm-smi
+    rocmPackages.rocminfo
+    btop-rocm
+    ryzenadj
+    tpm2-tss
+
     pciutils
+    usbutils
+    lm_sensors
+    btop
+    screen
+    qrencode
+    jq
 
-    # Copied from https://github.com/mitchellh/nixos-config/blob/main/machines/vm-shared.nix
-    # For hypervisors that support auto-resizing, this script forces it.
-    # I've noticed not everyone listens to the udev events so this is a hack.
-    (writeShellScriptBin "xrandr-auto" ''
-      xrandr --output Virtual-1 --auto
-    '')
+    (python314.withPackages (
+      p: with p; [
+        numpy
+        duckdb
+        pandas
+        huggingface-hub
+      ]
+    ))
   ];
 
-  hardware.graphics = {
+  services.openssh = {
     enable = true;
-  };
-
-  programs.hyprland.enable = true;
-  programs.dconf.profiles.user.databases = [
-    {
-      settings."org/gnome/desktop/interface" = {
-        gtk-theme = "Adwaita";
-        icon-theme = "Flat-Remix-Red-Dark";
-        font-name = "Noto Sans Medium 11";
-        document-font-name = "Noto Sans Medium 11";
-        monospace-font-name = "Noto Sans Mono Medium 11";
-      };
-    }
-  ];
-
-  programs.uwsm = {
-    enable = true;
-    waylandCompositors = {
-      hyprland = {
-        prettyName = "Hyprland";
-        comment = "Hyprland managed by UWSM";
-        binPath = "/run/current-system/sw/bin/Hyprland"; # Path to Hyprland binary
-      };
+    settings = {
+      PermitRootLogin = "no";
+      PasswordAuthentication = false;
+      KbdInteractiveAuthentication = false;
+      X11Forwarding = false;
     };
   };
 
-  users.defaultUserShell = pkgs.zsh;
+  programs.zsh.enable = true;
 
-  nixpkgs.hostPlatform = "x86_64-linux";
   system.stateVersion = "25.11";
 }

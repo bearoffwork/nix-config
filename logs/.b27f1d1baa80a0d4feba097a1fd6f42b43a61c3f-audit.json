@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "logs/.b27f1d1baa80a0d4feba097a1fd6f42b43a61c3f-audit.json",
+    "files": [
+        {
+            "date": 1789810072243,
+            "name": "logs/meiliSync-2026-09-19.log",
+            "hash": "4dfb04db352196ea5c095a01c521543bb4201c117ab9786e60fb0a6c95c2291c"
+        }
+    ],
+    "hashType": "sha256"
+}

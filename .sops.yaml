@@ -1,7 +1,10 @@
 keys:
   - &grind age18vnpa96azc592y2k6znvgsmk3ha5hp2z5j5fvkp7gynuapsr6sfsynfq4t
+  - &bear_rosetta age1cr98chsh2zxdlttndx2dt5cx2glr2q0x0648fymnx922xjrmka2q0apk7z
+  - &sys_rosetta age10ma9mumkp5ajtmvawtfwgex966n3677ldw9snjqg96x2yh5ld93s6ndf04
 creation_rules:
-  - path_regex: secrets/grind\.json$
+  - path_regex: secrets/[^/]+\.(yaml|json|env|ini)$
     key_groups:
-      - age:
-          - *grind
+    - age:
+      - *bear_rosetta
+      - *sys_rosetta

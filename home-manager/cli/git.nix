@@ -68,7 +68,7 @@
         maintenance = {
           auto = true;
           strategy = "incremental";
-          repo = [ "${config.home.srcDirectory}/o/nixpkgs" ];
+          repo = [ "${config.home.homeDirectory}/src/o/nixpkgs" ];
         };
 
         init.defaultBranch = "main";

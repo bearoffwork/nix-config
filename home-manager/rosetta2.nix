@@ -1,3 +1,5 @@
+# This is your home-manager configuration file
+# Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
 {
   config,
   lib,
@@ -11,7 +13,14 @@
     ./cli/sops.nix
     ./cli/zsh
     ./neovim
+    ./wezterm
   ];
+
+  nixpkgs.config.allowUnfreePredicate =
+    pkg:
+    builtins.elem (lib.getName pkg) [
+      "google-chrome"
+    ];
 
   home = {
     username = "bear";
@@ -56,6 +65,11 @@
   programs.git.enable = true;
   programs.bash.enable = true;
   programs.zsh.enable = true;
+
+  programs.google-chrome = {
+    enable = true;
+    package = pkgs.google-chrome;
+  };
 
   systemd.user.startServices = "sd-switch";
   home.stateVersion = "25.05";
