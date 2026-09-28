@@ -7,3 +7,5 @@ templates/*/.bin
 /result
 .direnv
 .envrc
+
+/*.conf

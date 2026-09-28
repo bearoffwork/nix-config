@@ -12,7 +12,7 @@ CLIENT_IP6=${2:-""}
 
 # Update these with your rosetta server's details
 SERVER_PUBKEY="spAIyvwsnZyqb/E5Am8FMnxDgDBNR5uh4XK35GgRvnY="
-SERVER_ENDPOINT="125.228.136.19:54088"
+SERVER_ENDPOINT="$SERVER_IP:54088"
 
 PRIV_KEY=$(wg genkey)
 PUB_KEY=$(echo "$PRIV_KEY" | wg pubkey)
@@ -28,7 +28,7 @@ Address = ${CLIENT_IP6/128/}
 [Peer]
 PublicKey = $SERVER_PUBKEY
 Endpoint = $SERVER_ENDPOINT
-AllowedIPs = fd08::/16
+AllowedIPs = fdbe::/16
 EOF
 
 printf "\033]1337;File=inline=1;preserveAspectRatio=1:%s\a\n" "$(qrencode -o - -t PNG <"${CLIENT_NAME}.conf" | base64 -w0)"

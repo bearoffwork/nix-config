@@ -58,7 +58,7 @@ in
         address = [
           # /32 and /128 specifies a single address
           # for use on this wg peer machine
-          "fd08:5408:3067::8/128"
+          "fdbe:0624:7530::88/128"
         ];
       };
 
@@ -79,16 +79,10 @@ in
 
       wireguardPeers = [
         {
-          # Clara
-          PublicKey = "WAQK7Wz5uEDt2lIR3tS5WnlZ2rX85j5BD43IZekBjlg=";
+          # Bear
+          PublicKey = "a3V5kJx6uZBW9b3CFVI19Gq+EjMfbAxAoE4+oTdj/Vs=";
           AllowedIPs = [
-            "fd08:5408:3067::9/128"
-          ];
-        }
-        {
-          PublicKey = "jhdCmaSKAk+9o0QzuUJrxL+nVMXetg7/Gr9FmarN0zk=";
-          AllowedIPs = [
-            "fd08:5408:3067::64/128"
+            "fdbe:0624:7530::be/128"
           ];
         }
       ];
