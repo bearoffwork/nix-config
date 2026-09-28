@@ -12,7 +12,7 @@
           inputs.sops-nix.nixosModules.sops
           ./hardware.nix
           ./network.nix
-          ./nix-settings.nix
+          ./nix.nix
           ./users.nix
           ./virt.nix
           ./llm
