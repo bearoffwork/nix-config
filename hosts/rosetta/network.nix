@@ -23,6 +23,7 @@ in
     firewall = {
       allowedTCPPorts = [
         8080
+        5000
       ];
       allowedUDPPorts = [
         wgPort
