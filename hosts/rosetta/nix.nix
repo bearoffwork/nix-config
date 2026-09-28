@@ -1,8 +1,25 @@
 {
+  outputs,
   lib,
   ...
 }:
 {
+  nixpkgs = {
+    config = {
+      rocmSupport = true;
+      allowUnfreePredicate =
+        pkg:
+        builtins.elem (lib.getName pkg) [
+          "cloudflare-warp"
+          "mongodb"
+        ];
+    };
+    overlays = [
+      outputs.overlays.rocm-only-gfx1151
+      outputs.overlays.unstable-pkgs
+    ];
+  };
+
   nix.settings = {
     experimental-features = [
       "nix-command"

@@ -26,6 +26,7 @@ return {
 
                     sh = { "shfmt" },
                     json = { "jq" },
+                    jsonc = { "jq" },
                     terraform = { "tofu_fmt" },
                     -- -- Conform will run multiple formatters sequentially
                     go = { "goimports-reviser", "gofmt", "golines" },
