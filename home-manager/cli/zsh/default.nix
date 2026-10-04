@@ -1,9 +1,15 @@
 {
   config,
   lib,
+  osConfig,
   pkgs,
   ...
-}: {
+}:
+
+let
+  isWsl = osConfig != null && osConfig.wsl.enable or false;
+in
+{
   imports = [
     ./starship.nix
   ];
@@ -47,9 +53,6 @@
       # Let Home Manager manage zsh environment, it will generate `.zshrc` and `.zshenv` for you.
       enable = true;
 
-      # set default keymap to emacs
-      defaultKeymap = "emacs";
-
       # Alternative ZDOTDIR
       dotDir = "${config.xdg.configHome}/zsh";
 
@@ -68,23 +71,29 @@
       # https://github.com/zsh-users/zsh-history-substring-search
       historySubstringSearch.enable = true;
 
+      setOptions = [
+        "interactive_comments"
+      ];
+
       # Store history file to xdg data directory for keeping home directory clean.
 
       initContent = lib.mkMerge (
         [
           (lib.mkOrder 500 ''
+            export WORDCHARS="*?_-.[]~/&;!#$%^(){}<>"
             export XDG_CONFIG_HOME="$HOME/.config"
 
-                     # prompt at bottom
-                     tput cup $(tput lines)
+            # prompt at bottom
+            tput cup $(tput lines)
           '')
           (lib.mkOrder 501 ''
-            # source fzf-tab plugin
             '.' '${pkgs.zsh-fzf-tab}/share/fzf-tab/fzf-tab.plugin.zsh'
 
-            # use ctrl + arrow keys to move between words
+            bindkey -e
             bindkey "^[[1;5C" forward-word
             bindkey "^[[1;5D" backward-word
+            bindkey '^P' up-history
+            bindkey '^N' down-history
           '')
           (lib.mkOrder 550 ''
             # enable bash completion
@@ -95,6 +104,20 @@
           (lib.mkOrder 1000 ''
             # enable awscli completion
             complete -C '${pkgs.awscli2}/bin/aws_completer' aws
+          '')
+        ]
+        ++ lib.optionals isWsl [
+          (lib.mkOrder 900 ''
+            # WezTerm OSC 7 directory tracking
+            function wezterm_osc7() {
+              printf "\e]7;file://%s%s\e\\" "$HOST" "$PWD"
+            }
+
+            # Append it to the hook array so it runs alongside direnv and zoxide
+            chpwd_functions+=(wezterm_osc7)
+
+            # Run it once to set the directory on initial shell load
+            wezterm_osc7
           '')
         ]
       );
@@ -113,7 +136,7 @@
       enable = true;
       enableZshIntegration = true;
       enableBashIntegration = true;
-      options = ["--cmd cd"];
+      options = [ "--cmd cd" ];
     };
 
     fzf = {

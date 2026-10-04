@@ -3,6 +3,10 @@ hm-switch target="$(whoami)@$(hostname)":
     #!/usr/bin/env bash
     home-manager switch --flake .#{{ target }}
 
+nvim-pack-rebuild:
+    #!/usr/bin/env bash
+    nix build .#nvim-packs -o ~/.local/share/nvim-packs
+
 switch host="$(hostname)":
     #!/usr/bin/env bash
     sudo darwin-rebuild switch --flake .#{{ host }}

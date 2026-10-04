@@ -1,8 +1,17 @@
+---@module "lz.n"
+---@type lz.n.PluginSpec[]
 return {
     {
         "oil.nvim",
         event = "VimEnter",
         keys = {
+            {
+                "-",
+                function()
+                    require("oil").open()
+                end,
+                desc = "Open Oil buffer",
+            },
             {
                 "<leader>fo",
                 function()

@@ -1,3 +1,5 @@
+---@module "lz.n"
+---@type lz.n.PluginSpec[]
 return {
     {
         "telescope.nvim",
@@ -17,12 +19,31 @@ return {
                 end,
                 desc = "Telescope find files",
             },
+            {
+                "<leader>fb",
+                function()
+                    require("telescope.builtin").buffers()
+                end,
+                desc = "Telescope find buffers",
+            },
+            {
+                "<leader>fh",
+                function()
+                    require("telescope.builtin").help_tags()
+                end,
+                desc = "Telescope find help_tags",
+            },
         },
         after = function()
             require("telescope").setup({
                 pickers = {
-                    find_files = { theme = "ivy" },
-                    live_grep = { theme = "ivy" },
+                    find_files = {
+                        theme = "ivy",
+                        hidden = true,
+                    },
+                    live_grep = {
+                        theme = "ivy",
+                    },
                 },
             })
             -- Any telescope-specific setup

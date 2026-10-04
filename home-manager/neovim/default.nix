@@ -1,50 +1,73 @@
 {
-  outputs,
   config,
   pkgs,
   ...
-}: {
+}:
+{
   programs.neovim = {
     enable = true;
     defaultEditor = true;
     viAlias = true;
     withNodeJs = true;
+    withPython3 = true;
+    withRuby = true;
+    sideloadInitLua = true;
+    # sideloadInitLua = true; # not yet in stable nixpkgs (25.11)
     plugins = with pkgs.vimPlugins; [
-      (pkgs.vimPlugins.nvim-treesitter.withPlugins (p:
-        with p; [
+      (pkgs.vimPlugins.nvim-treesitter.withPlugins (
+        p: with p; [
+          bash
+          c
+          css
+          devicetree
+          dockerfile
           go
+          hcl
+          html
           javascript
-          xml
-          yaml
-          markdown
-          markdown-inline
           json
           just
+          kconfig
           lua
+          markdown
+          markdown-inline
           nix
           php
           python
+          sql
+          toml
           typescript
-        ]))
+          xml
+          yaml
+        ]
+      ))
     ];
     extraPackages = with pkgs; [
       tree-sitter
       lua-language-server
       stylua
       nixd
+      nixfmt
       alejandra
       bash-language-server
       shfmt
+      # docker-language-server # insecure docker_28 dep, blocked on stable nixpkgs
+      # docker-compose-language-service
+      basedpyright # py lsp
+      isort # py fmt
+      black # py fmt
+      # sqlfluff # sql fmt https://github.com/sqlfluff/sqlfluff
+      # sqls # sql lsp https://github.com/sqls-server/sqls
+      sql-formatter
+      taplo # toml fmt
     ];
   };
 
   xdg.configFile."nvim" = {
-    source =
-      config.lib.file.mkOutOfStoreSymlink
-      "${config.home.homeDirectory}/src/p/nix-config/home-manager/neovim/config";
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/p/nix-config/home-manager/neovim/config";
   };
 
   xdg.dataFile."nvim-packs" = {
-    source = outputs.packages.${pkgs.system}.nvim-packs;
+    source = pkgs.callPackage ./nvim-packs.nix { };
   };
 }

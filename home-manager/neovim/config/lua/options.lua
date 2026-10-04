@@ -1,10 +1,15 @@
+-- Disable built-in SQL ftplugin mappings (sqcomplete.vim in $VIMRUNTIME).
+-- Without this, <C-c> in normal mode on sql files inserts a literal "C" character
+-- because sql.vim sets up legacy omni-completion maps that intercept the keypress.
+vim.g.omni_sql_no_default_maps = 1
+
 vim.o.number = true
+vim.o.wrap = false
 vim.o.relativenumber = true
 vim.o.tabstop = 4
 vim.o.shiftwidth = 4
 vim.o.softtabstop = 4
 vim.o.expandtab = true
-vim.o.clipboard = "unnamedplus"
 
 vim.o.mouse = "a"
 vim.o.mousefocus = true
@@ -25,7 +30,29 @@ vim.o.cursorline = true
 vim.o.scrolloff = 10
 vim.o.confirm = true
 
-vim.keymap.set("t", "<Esc><Esc>", "<C-\\><C-n>", { desc = "Exit terminal mode" })
+vim.o.title = true
+vim.o.titlestring = " %t"
+
+vim.o.clipboard = "unnamedplus"
+
+local function paste()
+    return {
+        vim.fn.split(vim.fn.getreg("\""), "\n"),
+        vim.fn.getregtype("\""),
+    }
+end
+
+vim.g.clipboard = {
+    name = "OSC 52",
+    copy = {
+        ["+"] = require("vim.ui.clipboard.osc52").copy("+"),
+        ["*"] = require("vim.ui.clipboard.osc52").copy("*"),
+    },
+    paste = {
+        ["+"] = paste,
+        ["*"] = paste,
+    },
+}
 
 vim.api.nvim_create_autocmd("TextYankPost", {
     desc = "Highlight when yanking (copying) text",

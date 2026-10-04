@@ -5,3 +5,5 @@ templates/*/.bin
 
 .idea
 /result
+.direnv
+.envrc

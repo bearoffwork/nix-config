@@ -1,11 +1,12 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   imports = [
     ./docker.nix
-    ./skhd.nix
+    ./hammerspoon
   ];
 
   home.packages = with pkgs; [
-    utm
+    # utm
     maccy
   ];
 }

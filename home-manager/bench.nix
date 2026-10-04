@@ -1,0 +1,87 @@
+# This is your home-manager configuration file
+# Use this to configure your home environment (it replaces ~/.config/nixpkgs/home.nix)
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+{
+  imports = [
+  modules/by-name/hm-srcdir.nix
+    ./cli/direnv.nix
+    ./cli/git.nix
+    ./cli/sops.nix
+    ./cli/zsh
+    ./neovim
+  ];
+
+  systemd.user.sockets.podman = {
+    Unit = {
+      Description = "Podman API Socket";
+    };
+    Socket = {
+      ListenStream = "%t/podman/podman.sock";
+      SocketMode = "0660";
+    };
+    Install = {
+      WantedBy = [ "sockets.target" ];
+    };
+  };
+
+  home = {
+    username = "bear";
+    homeDirectory =
+      if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}";
+  };
+
+  xdg.configFile."home-manager" = {
+    source = config.lib.file.mkOutOfStoreSymlink "${config.home.homeDirectory}/src/p/nix-config";
+  };
+
+  home.packages = with pkgs; [
+    coreutils
+    gnused
+    # gnumake
+    git
+    ripgrep
+    fd
+    bat
+    curl
+    wget
+    rsync
+
+    # docker-client
+    # amazon-ecr-credential-helper
+    # dive
+
+    # wireguard-tools
+    # nixos-rebuild
+
+    # xmlstarlet
+    just
+    htop
+    # nvtopPackages.apple
+    # llama-cpp
+    dust
+    dig
+    viddy
+  ];
+
+  home.sessionPath = [
+    "$HOME/.local/bin"
+  ];
+
+  home.shellAliases = {
+    j = "just";
+    hm = "home-manager";
+  };
+
+  programs.home-manager.enable = true;
+  programs.git.enable = true;
+  programs.bash.enable = true;
+  programs.zsh.enable = true;
+
+  systemd.user.startServices = "sd-switch";
+  home.stateVersion = "25.05";
+}

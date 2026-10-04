@@ -1,4 +1,10 @@
-{pkgs, ...}: {
+{
+  config,
+  pkgs,
+  ...
+}:
+
+{
   home.packages = with pkgs; [
     git
     gh
@@ -19,45 +25,83 @@
     git = {
       enable = true;
 
-      userName = "Bear.Y";
-      userEmail = "codes@bearoff.wrok";
+      includes =
+        let
+          workProfile = {
+            contents = {
+              user = {
+                email = "bear@eui.money";
+                name = "Bear Yu";
+              };
+            };
+          };
+        in
+        [
+          {
+            inherit (workProfile) contents;
+            condition = "gitdir:~/src/eui/";
+          }
+          {
+            inherit (workProfile) contents;
+            condition = "hasconfig:remote.*.url:**/euimoney/**";
+          }
+        ];
 
-      includes = [
-        {
-          condition = "hasconfig:remote.origin.url:https://github.com/euimoney/*";
-          contents.user.email = "bear@eui.money";
-        }
-      ];
+      settings = {
+        user.name = "Bear.Y";
+        user.email = "code@bearoff.work";
 
-      extraConfig = {
-        # Opinionated git configuration.
+        core = {
+          fsmonitor = true;
+          untrackedcache = true;
+          preloadindex = true;
+        };
+
+        protocol = {
+          version = 2;
+        };
+
+        fetch = {
+          parallel = 8;
+        };
+
+        maintenance = {
+          auto = true;
+          strategy = "incremental";
+          repo = [ "${config.home.homeDirectory}/src/o/nixpkgs" ];
+        };
+
         init.defaultBranch = "main";
         pull.rebase = true;
         rebase.autoStash = true;
+        push.autoSetupRemote = true;
         merge.ff = false;
         rerere.enabled = true;
         # disable mac keychain to fix gh randomly unauthorized issue.
         credential.helper = "";
-
         branch.sort = "committerdate";
-      };
+        alias = {
+          sw = "show";
+          st = "status";
+          ch = "checkout";
+          pu = "push";
+          pl = "pull";
+          aa = "add -A";
 
-      # Declares aliases
-      aliases = {
-        sw = "show";
-        st = "status";
-        ch = "checkout";
-        pu = "push";
-        pl = "pull";
-        aa = "add -A";
-        cm = "commit -m";
-        cam = "commit -am";
-        caa = "commit -a --amend";
-        caam = "commit -a --amend -m";
-        mr = "merge --no-ed";
-        mrc = "merge --continue";
-        rs = "reset";
-        cp = "cherry-pick";
+          cm = "commit -m";
+          ca = "commit --amend";
+          cam = "commit -am";
+          caa = "commit -a --amend";
+          caam = "commit -a --amend -m";
+
+          mr = "merge --no-ed";
+          mrc = "merge --continue";
+
+          rs = "reset";
+          rsh = "reset --hard";
+
+          cp = "cherry-pick";
+        };
       };
     };
   };
