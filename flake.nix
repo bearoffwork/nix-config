@@ -25,7 +25,7 @@
   };
 
   outputs =
-    inputs@{ ... }:
+    { ... }@inputs:
     let
       inherit (inputs.self) outputs;
       inherit (inputs.nixpkgs-unstable) lib;
@@ -38,7 +38,7 @@
         system:
         import inputs.nixpkgs-unstable {
           inherit system;
-          overlays = overlays.unstable-pkgs;
+          overlays = [ overlays.unstable-pkgs ];
         }
       );
 

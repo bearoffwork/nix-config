@@ -51,8 +51,8 @@
     };
   };
 
-  systemd.services.homepage-dashboard.environment.HOMEPAGE_ALLOWED_HOSTS = lib.mkForce
-    "localhost:8082,127.0.0.1:8082,192.168.1.240:8082,192.168.254.1:8082";
+  systemd.services.homepage-dashboard.environment.HOMEPAGE_ALLOWED_HOSTS =
+    lib.mkForce "localhost:8082,127.0.0.1:8082,192.168.1.240:8082,192.168.254.1:8082";
 
   users.users.homepage = {
     isSystemUser = true;

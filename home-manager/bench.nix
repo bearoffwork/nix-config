@@ -8,7 +8,7 @@
 }:
 {
   imports = [
-  modules/by-name/hm-srcdir.nix
+    modules/by-name/hm-srcdir.nix
     ./cli/direnv.nix
     ./cli/git.nix
     ./cli/sops.nix
@@ -32,7 +32,10 @@
   home = {
     username = "bear";
     homeDirectory =
-      if pkgs.stdenv.hostPlatform.isDarwin then "/Users/${config.home.username}" else "/home/${config.home.username}";
+      if pkgs.stdenv.hostPlatform.isDarwin then
+        "/Users/${config.home.username}"
+      else
+        "/home/${config.home.username}";
   };
 
   xdg.configFile."home-manager" = {

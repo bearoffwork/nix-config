@@ -39,7 +39,13 @@ let
       in
       sysBuilder {
         inherit modules;
-        specialArgs = { inherit inputs outputs systemName; };
+        specialArgs = {
+          inherit
+            inputs
+            outputs
+            systemName
+            ;
+        };
       }
     );
 in

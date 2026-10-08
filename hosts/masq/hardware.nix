@@ -35,7 +35,7 @@
       grub = {
         enable = true;
         forceInstall = true;
-        device = "nodev";
+        device = "/dev/sda";
 
         # Allow serial connection for GRUB to be able to use LISH
         extraConfig = ''
