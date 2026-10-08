@@ -6,23 +6,35 @@ let
 in
 {
   networking = {
-    useDHCP = false;
-    useNetworkd = true;
     usePredictableInterfaceNames = false;
+    useDHCP = false;
+    interfaces.eth0 = {
+      useDHCP = true;
 
-    networkmanager.enable = false;
-  };
-
-  systemd.network.enable = true;
-  systemd.network.networks."10-eth0" = {
-    matchConfig.Name = "eth0";
-    linkConfig.RequiredForOnline = "routable";
-    networkConfig = {
-      DHCP = "yes";
-      IPv6PrivacyExtensions = false;
+      # Linode expects IPv6 privacy extensions to be disabled, so disable them
+      # See: https://www.linode.com/docs/guides/manual-network-configuration/#static-vs-dynamic-addressing
+      tempAddress = "disabled";
     };
   };
 
+  # networking = {
+  #   useDHCP = false;
+  #   useNetworkd = true;
+  #   usePredictableInterfaceNames = false;
+  #
+  #   networkmanager.enable = false;
+  # };
+  #
+  # systemd.network.enable = true;
+  # systemd.network.networks."10-eth0" = {
+  #   matchConfig.Name = "eth0";
+  #   linkConfig.RequiredForOnline = "routable";
+  #   networkConfig = {
+  #     DHCP = "yes";
+  #     IPv6PrivacyExtensions = false;
+  #   };
+  # };
+  #
   # systemd.network.networks."50-wg0" = {
   #   matchConfig.Name = "wg0";
   #   address = [
