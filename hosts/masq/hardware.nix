@@ -19,11 +19,6 @@
   boot.kernelModules = [ ];
   boot.extraModulePackages = [ ];
 
-  boot.loader.efi = {
-    canTouchEfiVariables = true;
-    efiSysMountPoint = "/boot/efi";
-  };
-
   # Increase Timeout to Allow LISH Connection
   # NOTE: The image generator tries to set a timeout of 0, so we must force
   boot.loader.timeout = lib.mkForce 10;
